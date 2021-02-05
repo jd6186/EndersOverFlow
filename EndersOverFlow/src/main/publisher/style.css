@@ -213,8 +213,9 @@ body {
   height: 55px;
   box-shadow: 0 1px 5px 0 rgb(41 85 115 / 21%);
   background-color: #fff;
-  z-index: 2000;
   position: relative;
+  padding: 3px;
+  padding-left: 10px
 }
 .logo_box{
   display: flex;
@@ -259,6 +260,7 @@ body {
 #content_wrap{
   height: 100%;
   display: flex;
+  padding: 10px;
 }
 
 .content{
