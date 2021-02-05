@@ -1,0 +1,60 @@
+package com.company.project.EndersOverFlow;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class MemberRepositoryTest {
+
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    MemberRepository MemberRepository;
+
+    @Test
+    public void di() throws SQLException {
+        try(Connection connection = dataSource.getConnection()){
+            DatabaseMetaData metaData = connection.getMetaData();
+            System.out.println(metaData.getURL());
+            System.out.println(metaData.getDriverName());
+            System.out.println(metaData.getUserName());
+        }
+    }
+    
+    @Test
+    public void MemberTestWithOption() throws SQLException {
+        Member member = new Member();
+        member.setId("kr670356");
+        member.setName("정동욱");
+        
+        System.out.println(member);
+        Member newMember = MemberRepository.save(member);
+
+        assertThat(newMember).isNotNull();
+
+        Optional<Member> existingMember = MemberRepository.findByName(member.getName());
+        assertThat(existingMember).isNotEmpty();
+
+        Optional<Member> nonExistingMember = MemberRepository.findByName("superman");
+        assertThat(nonExistingMember).isEmpty();
+    }
+}
+

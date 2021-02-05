@@ -1,0 +1,5 @@
+package com.company.project.EndersOverFlow.repository;
+
+public interface Member_JPA_Repository {
+
+}

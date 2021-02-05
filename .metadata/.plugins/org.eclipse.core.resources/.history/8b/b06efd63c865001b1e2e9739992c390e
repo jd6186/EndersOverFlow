@@ -1,0 +1,46 @@
+package com.company.project.EndersOverFlow;
+
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class MemberRepositoryTest {
+	
+	@Autowired
+	DataSource dataSource;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	MemberRepository MemberRepository;
+	
+	@Test
+	public void di() throws SQLException {
+	try(Connection connection = dataSource.getConnection()){
+	DatabaseMetaData metaData = connection.getMetaData();
+	System.out.println(metaData.getURL());
+	System.out.println(metaData.getDriverName());
+	System.out.println(metaData.getUserName());
+	}
+	}
+	
+	@Test
+	public void MemberTest() throws SQLException {
+	Member Member = new Member();
+		Member.setUsername("saelobi");
+	Member.setPassword("pass");
+	
+	Member newMember = MemberRepository.save(Member);
+	
+	assertThat(newMember).isNotNull();
+	
+	Member existingMember = MemberRepository.findByUsername(newMember.getUsername());
+		assertThat(existingMember).isNotNull();
+	
+	Member nonExistingMember = MemberRepository.findByName("superman");
+		assertThat(nonExistingMember).isNull();
+	}
+}
