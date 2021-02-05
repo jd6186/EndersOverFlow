@@ -255,6 +255,7 @@ body {
   top: 55px;
   width: 100%;
   background-color: rgb(42, 46, 45);
+  left: 0;
 }
 
 #content_wrap{
@@ -277,10 +278,6 @@ body {
   }
   .side_bar{
     display: none;
-  }
-  .mobile_header{
-    display: block;
-    left: 0;
   }
 }
 

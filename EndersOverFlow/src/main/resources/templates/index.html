@@ -8,6 +8,14 @@
 </head>
 
 <body>
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+	    function openToggle(){
+	    	const mo_header = document.getElementById("mo_h");
+	    	mo_header.style.display = mo_header.style.display === "block" ? "none" : "block"
+	    }
+	    /*]]>*/
+	</script>
   <section id="wrap">
     <header id="header_wrap">
       <div class="header_box">
@@ -16,9 +24,9 @@
           <h1>EndersOverFlow</h1>
         </div>
         <div class="list_btn">
-          <img th:src="@{/img/list_btn.PNG}" alt="">
+          <img th:src="@{/img/list_btn.PNG}" alt="" th:onclick="javascript:openToggle()">
         </div>
-        <div class="mobile_header">
+        <div class="mobile_header" id="mo_h">
           <ul>
             <li><a href="#">ㅎㅇ</a></li>
             <li><a href="#">ㅎㅇ</a></li>
