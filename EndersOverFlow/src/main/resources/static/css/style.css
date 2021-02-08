@@ -158,7 +158,7 @@ textarea {
   resize: none;
 }
 a {
-  color: #ffffff;
+  color: rgb(0, 0, 0);
   text-decoration: none;
 }
 a:link,
@@ -215,12 +215,15 @@ body {
   background-color: #fff;
   position: relative;
   padding: 3px;
-  padding-left: 10px
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
 }
-.logo_box{
+.logo_box, .login_box{
   display: flex;
   align-items: center;
 }
+
 .logo_box > h1{
   font-weight: bold;
 }
@@ -273,11 +276,17 @@ body {
   .logo_box {
     justify-content: center;
   }
+  .login_box{
+  	display: none;
+  }
   .list_btn{
     display: block;
   }
   .side_bar{
     display: none;
+  }
+  .header_box{
+    display: block;
   }
 }
 
