@@ -265,6 +265,7 @@ html, body {
 	width: 600px;
 	height: 300px;
 	margin-top: 50px;
+	text-align: center;
 }
 
 .monthly_code {
@@ -273,6 +274,7 @@ html, body {
 	margin: 0 auto;
 	margin-top: 50px;
 	margin-bottom: 50px;
+	text-align: center;
 }
 .monthly_code, .my_code, .profile_box{
 	background-color: #e9ecef;
