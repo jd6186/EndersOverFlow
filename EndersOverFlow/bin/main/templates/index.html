@@ -21,7 +21,7 @@
       <div class="header_box">
         <div class="logo_box">
           <img th:src="@{/img/logo.PNG}" alt="">
-          <h1>EndersOverFlow</h1>
+          <a href="/"><h1>EndersOverFlow</h1></a>
         </div>
         <div class="login_box">
         	<a href="/member/login">로그인</a>
@@ -48,7 +48,29 @@
         </ul>
       </nav>
       <div class="content">
-        gd
+      	<div class="my_menu">
+        <div class="profile_box">
+        	<div class="profile_img"><img th:src="@{/img/logo.PNG}" alt=""></div>
+        	<div class="profile_content">
+        		<table>
+        			<tr>
+        				<th>이　름</th>
+        				<td>동욱정</td>
+        			</tr>
+        			<tr>
+        				<th>닉네임</th>
+        				<td>맛맛맛</td>
+        			</tr>
+        			<tr>
+        				<th>추천수</th>
+        				<td>200개</td>
+        			</tr>
+        		</table>
+        	</div> 
+        </div>
+      	<div class="my_code">내 최근 코드</div>
+      	</div>
+      	<div class="monthly_code">이달의 코드</div>
       </div>
     </section>
   </section>
