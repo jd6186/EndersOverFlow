@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http:www.thymeleaf.org">
+    <head>
+		<meta charset="UTF-8">
+        <title>로그인 / 회원가입</title>
+    	<link th:href="@{/css/login.css}" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="form-wrap">
+                <div class="social-icons">
+                    <img th:src="@{/img/logo.png}" alt="enders_logo">
+                </div>
+                <div class="button-wrap">
+                    <div id="btn"></div>
+                    <button type="button" class="togglebtn" onclick="login()">LOG IN</button>
+                    <button type="button" class="togglebtn" onclick="register()">REGISTER</button>
+                </div>
+                <form id="login" action="" class="input-group">
+                    <input type="text" class="input-field" placeholder="User name or Email" required>
+                    <input type="password" class="input-field" placeholder="Enter Password" required>
+                    <input type="checkbox" class="checkbox"><span>Remember Password</span>
+                    <button class="submit">Login</button>
+                </form>
+                <form id="register" action="" class="input-group">
+                    <input type="text" class="input-field" placeholder="닉네임 입력" required>
+                    <input type="email" class="input-field" placeholder="이메일 입력(example@enders.co.kr)" required>
+                    <input type="password" class="input-field" placeholder="영문/숫자/특수문자(선택) 조합 8~20자리 비밀번호 설정" required>
+                    <input type="password" class="input-field" placeholder="비밀번호 확인" required>
+                    <input type="checkbox" class="checkbox"><span>Terms and conditions</span>
+                    <button class="submit">REGISTER</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            var x = document.getElementById("login");
+            var y = document.getElementById("register");
+            var z = document.getElementById("btn");
+            
+            function login(){
+                x.style.left = "50px";
+                y.style.left = "450px";
+                z.style.left = "0";
+            }
+
+            function register(){
+                x.style.left = "-400px";
+                y.style.left = "50px";
+                z.style.left = "110px";
+            }
+        </script>
+    </body>
+</html> 
