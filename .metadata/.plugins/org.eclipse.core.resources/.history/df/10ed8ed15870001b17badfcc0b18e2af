@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http:www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<title>CodeReviewList</title>
+</head>
+
+<body>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		function openToggle() {
+			const mo_header = document.getElementById("mo_h");
+			mo_header.style.display = mo_header.style.display === "block" ? "none"
+					: "block"
+		}
+		/*]]>*/
+	</script>
+	<section id="wrap">
+		<header id="header_wrap">
+			<div class="header_box">
+				<div class="logo_box">
+					<img th:src="@{/img/logo.PNG}" alt=""> <a href="/"><h1>EndersOverFlow</h1></a>
+				</div>
+				<div class="login_box">
+					<a href="/member/login">로그인</a>
+				</div>
+				<div class="list_btn">
+					<img th:src="@{/img/list_btn.PNG}" alt=""
+						th:onclick="javascript:openToggle()">
+				</div>
+				<div class="mobile_header" id="mo_h">
+					<ul>
+						<li><a href="#">ㅎㅇ</a></li>
+						<li><a href="#">ㅎㅇ</a></li>
+						<li><a href="#">ㅎㅇ</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<section id="content_wrap">
+			<nav class="side_bar">
+				<ul>
+					<li>코드리뷰</li>
+					<li>코드리뷰</li>
+					<li>코드리뷰</li>
+					<li>코드리뷰</li>
+				</ul>
+			</nav>
+			<div class="content">
+				<div class="review_item" style="background-color: white; padding-top: 5px; padding-left: 10px; padding-right: 10px;">
+					<span th:text="타이틀" style="margin: auto 0px;"></span>
+					<img alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
+					 <!-- 클릭 하면 꽉찬별로 바꿔주기 -->
+				</div> 
+				<!-- <th:block th:each="item : ${codeReviewList}"> 
+					<div class="review_item">
+						<div th:text="${item.title}" style="margin: auto 0px;"></div>
+						<img th:if="${item.isStar} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 빈별로 바꿔주기
+						<img th:if="${item.isStar} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 꽉찬별로 바꿔주기
+					</div>  -->
+				</th:block>
+			</div>
+		</section>
+	</section>
+</body>
+<script type="text/javascript">
+	function starChange(isStar) {
+		if (isStar == 'Y') {
+			// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 N으로 바꾸고
+			// star 글 목록에서 해당 글의 star수를 -1 시키기 
+		} else {
+			// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 Y로 바꾸고
+			// star 글 목록에서 해당 글의 star수를 +1 시키기 
+		}
+	}
+</script>
+</html>

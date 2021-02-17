@@ -1,9 +1,0 @@
-package com.company.project.EndersOverFlow;
-
-import org.junit.runner.RunWith;
-
-@RunWith(SpringRunner.class)
-@DataJpaTest
-public class MemberRepositoryTest {
-
-}
