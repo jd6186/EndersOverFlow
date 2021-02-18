@@ -44,16 +44,9 @@
     <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.model.Member"/>
     <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.repository.MemberRepository"/>
     <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.service.MemberService"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Controller"/>
     <fullyQualifiedTypeName name="org.springframework.http.HttpHeaders"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestMethod"/>
     <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.EnableAutoConfiguration"/>
     <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"/>
-    <fullyQualifiedTypeName name="org.springframework.stereotype.Controller"/>
-    <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.model.CodeReview"/>
-    <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.repository.CodeReviewRepository"/>
-    <fullyQualifiedTypeName name="org.springframework.ui.Model"/>
-    <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.service.CodeReviewService"/>
-    <fullyQualifiedTypeName name="java.lang.Long"/>
-    <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.repository.CommentsRepository"/>
-    <fullyQualifiedTypeName name="com.company.project.EndersOverFlow.model.Comments"/>
 </qualifiedTypeNameHistroy>

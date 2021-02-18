@@ -1,0 +1,8 @@
+package com.company.project.EndersOverFlow.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.company.project.EndersOverFlow.model.Member;
+
+public interface Member_JPA_Repository extends JpaRepository<Member, Long>{
+    Member findMemberByName(String name);
+}
