@@ -7,8 +7,12 @@ public class Comments {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long CM_NO;
-	private Long CR_NO;
-	private String CM_CREATER;
+	@ManyToOne
+	@JoinColumn(name = "CODE_REVIEW", referencedColumnName = "CR_NO")
+	private CodeReview CM_CR_NO;
+	@ManyToOne
+	@JoinColumn(name = "ENDERS_MEMBER", referencedColumnName = "MBR_NO")
+	private Member CM_CREATER;
 	private String CM_CONTENTS;
 	private String CM_CREATEDAY;
 	private String CM_UPDATEDAY;
@@ -18,11 +22,11 @@ public class Comments {
 	public Comments() {
 	}
 
-	public Comments(Long cM_NO, Long cR_NO, String cM_CREATER, String cM_CONTENTS, String cM_CREATEDAY,
+	public Comments(Long cM_NO, CodeReview cM_CR_NO, Member cM_CREATER, String cM_CONTENTS, String cM_CREATEDAY,
 			String cM_UPDATEDAY, String cM_ISVIEW, Long cM_STAR_COUNT) {
 		super();
 		CM_NO = cM_NO;
-		CR_NO = cR_NO;
+		CM_CR_NO = cM_CR_NO;
 		CM_CREATER = cM_CREATER;
 		CM_CONTENTS = cM_CONTENTS;
 		CM_CREATEDAY = cM_CREATEDAY;
@@ -39,19 +43,19 @@ public class Comments {
 		CM_NO = cM_NO;
 	}
 
-	public Long getCR_NO() {
-		return CR_NO;
+	public CodeReview getCM_CR_NO() {
+		return CM_CR_NO;
 	}
 
-	public void setCR_NO(Long cR_NO) {
-		CR_NO = cR_NO;
+	public void setCM_CR_NO(CodeReview cM_CR_NO) {
+		CM_CR_NO = cM_CR_NO;
 	}
 
-	public String getCM_CREATER() {
+	public Member getCM_CREATER() {
 		return CM_CREATER;
 	}
 
-	public void setCM_CREATER(String cM_CREATER) {
+	public void setCM_CREATER(Member cM_CREATER) {
 		CM_CREATER = cM_CREATER;
 	}
 
@@ -97,7 +101,7 @@ public class Comments {
 
 	@Override
 	public String toString() {
-		return "Comments [CM_NO=" + CM_NO + ", CR_NO=" + CR_NO + ", CM_CREATER=" + CM_CREATER + ", CM_CONTENTS="
+		return "Comments [CM_NO=" + CM_NO + ", CM_CR_NO=" + CM_CR_NO + ", CM_CREATER=" + CM_CREATER + ", CM_CONTENTS="
 				+ CM_CONTENTS + ", CM_CREATEDAY=" + CM_CREATEDAY + ", CM_UPDATEDAY=" + CM_UPDATEDAY + ", CM_ISVIEW="
 				+ CM_ISVIEW + ", CM_STAR_COUNT=" + CM_STAR_COUNT + "]";
 	}

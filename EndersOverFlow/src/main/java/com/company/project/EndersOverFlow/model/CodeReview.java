@@ -10,7 +10,9 @@ public class CodeReview {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long CR_NO;
 	private String CR_TITLE;
-	private Long CR_CREATER;
+	@ManyToOne
+	@JoinColumn(name = "ENDERS_MEMBER", referencedColumnName = "MBR_NO")
+	private Member CR_CREATER;
 	private String CR_CONTENTS;
 	private String CR_CREATEDAY;
 	private String CR_UPDATEDAY;
@@ -20,7 +22,7 @@ public class CodeReview {
 	public CodeReview() {
 	}
 
-	public CodeReview(Long cR_NO, String cR_TITLE, Long cR_CREATER, String cR_CONTENTS, String cR_CREATEDAY,
+	public CodeReview(Long cR_NO, String cR_TITLE, Member cR_CREATER, String cR_CONTENTS, String cR_CREATEDAY,
 			String cR_UPDATEDAY, String cR_ISVIEW, Long cR_STAR_COUNT) {
 		super();
 		CR_NO = cR_NO;
@@ -49,11 +51,11 @@ public class CodeReview {
 		CR_TITLE = cR_TITLE;
 	}
 
-	public Long getCR_CREATER() {
+	public Member getCR_CREATER() {
 		return CR_CREATER;
 	}
 
-	public void setCR_CREATER(Long cR_CREATER) {
+	public void setCR_CREATER(Member cR_CREATER) {
 		CR_CREATER = cR_CREATER;
 	}
 
