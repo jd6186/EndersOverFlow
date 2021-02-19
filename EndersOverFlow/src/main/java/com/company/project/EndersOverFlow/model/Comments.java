@@ -1,14 +1,11 @@
 package com.company.project.EndersOverFlow.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-
-@Entity(name="CODE_REVIEW")
+@Entity(name = "COMMENTS")
 public class Comments {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long CM_NO;
 	private Long CR_NO;
 	private String CM_CREATER;
@@ -34,8 +31,6 @@ public class Comments {
 		CM_STAR_COUNT = cM_STAR_COUNT;
 	}
 
-	
-	
 	public Long getCM_NO() {
 		return CM_NO;
 	}
@@ -106,5 +101,5 @@ public class Comments {
 				+ CM_CONTENTS + ", CM_CREATEDAY=" + CM_CREATEDAY + ", CM_UPDATEDAY=" + CM_UPDATEDAY + ", CM_ISVIEW="
 				+ CM_ISVIEW + ", CM_STAR_COUNT=" + CM_STAR_COUNT + "]";
 	}
-	
+
 }

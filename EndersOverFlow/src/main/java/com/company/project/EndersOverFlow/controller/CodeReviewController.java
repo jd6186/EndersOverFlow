@@ -14,36 +14,36 @@ import com.company.project.EndersOverFlow.model.CodeReview;
 
 @Controller
 @RequestMapping("codeReview")
-public class CodeReviewController { 
-	// 기본형 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass()); 
-	@Autowired com.company.project.EndersOverFlow.service.CodeReviewService codeReviewService; 
-	
+public class CodeReviewController {
+	// 기본형
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	com.company.project.EndersOverFlow.service.CodeReviewService codeReviewService;
+
 	// 코드리뷰 리스트 전체 목록 페이지로 이동
 	@RequestMapping("list")
-	public String goCodeReviewListPage(Model model) { 
+	public String goCodeReviewListPage(Model model) {
 		logger.info("codeReviewList 조회 시작");
-		
-		List<CodeReview> codeReview = codeReviewService.codeReviewFindAll(); 
+
+		List<CodeReview> codeReview = codeReviewService.codeReviewFindAll();
 		model.addAttribute("codeReviewList", codeReview);
-		
+
 		logger.info("codeReviewList 조회 종료");
 		return "code_review/ReviewList";
 	}
-	
+
 	// 코드리뷰 상세글 페이지로 이동
 	@RequestMapping("detail")
-	public String goCodeReviewDetailPage(Model model) { 
+	public String goCodeReviewDetailPage(Model model) {
 		logger.info("codeReviewDetail 조회 시작");
-		
-		Long requestData = (long)1;
-		Optional<CodeReview> codeReview = codeReviewService.codeReviewFindById(requestData); 
+
+		Long requestData = (long) 1;
+		Optional<CodeReview> codeReview = codeReviewService.codeReviewFindById(requestData);
 		model.addAttribute("codeReviewDetail", codeReview);
 		System.out.println(model.getAttribute("codeReviewDetail"));
-		
+
 		logger.info("codeReviewDetail 조회 종료");
 		return "code_review/ReviewDetail";
-	} 
+	}
 
 }
-
