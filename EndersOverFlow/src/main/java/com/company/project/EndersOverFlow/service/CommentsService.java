@@ -39,7 +39,7 @@ public class CommentsService {
 		Optional<Comments> commentsOptional = commentsRepository.findById(CR_NO);
 		if (commentsOptional.isPresent()) {
 			commentsOptional.get().setCM_NO(comments.getCM_NO());
-			commentsOptional.get().setCR_NO(comments.getCR_NO());
+			commentsOptional.get().setCM_CR_NO(comments.getCM_CR_NO());
 			commentsOptional.get().setCM_CREATER(comments.getCM_CREATER());
 			commentsOptional.get().setCM_CONTENTS(comments.getCM_CONTENTS());
 			commentsOptional.get().setCM_CREATEDAY(comments.getCM_CREATEDAY());
