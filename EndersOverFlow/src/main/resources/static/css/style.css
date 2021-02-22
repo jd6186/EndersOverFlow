@@ -147,7 +147,8 @@ html, body {
 
 .side_bar ul li {
 	padding: 15px;
-	padding-left: 30px;
+	text-align: center;
+	font-weight: bold;
 }
 
 .side_bar ul li:hover {
@@ -228,14 +229,12 @@ html, body {
 .my_menu {
 	display: flex;
 	justify-content: center;
-	flex-flow: row-reverse;
+	margin-top: 50px;
 }
 
 .profile_box {
-	width: 300px;
-	height: 300px;
-	margin-top: 50px;
-	margin-left: 20px;
+	text-align: center;
+	margin: 20px 0;
 }
 
 .profile_img {
@@ -262,24 +261,37 @@ html, body {
 }
 
 .my_code {
-	width: 600px;
-	height: 300px;
-	margin-top: 50px;
+	width: 60%;
+	height: 500px;
 	text-align: center;
+	margin: 5px
+}
+
+.monthly_king{
+	width: 35%;
+	margin: 5px;
+	height: 500px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .monthly_code {
-	width: 920px;
+	width: 100%;
 	height: 200px;
-	margin: 0 auto;
-	margin-top: 50px;
-	margin-bottom: 50px;
+	text-align: center;
+	
+}
+.monthly_tips {
+	width: 100%;
+	height: 200px;
 	text-align: center;
 }
-.monthly_code, .my_code, .profile_box{
+
+.monthly_code, .my_code, .monthly_tips{
 	background-color: #e9ecef;
 	border: 1px solid #bbbbbb;
-	border-radius: 20px;
+	border-radius: 5px;
 }
 
 @media screen and (max-width: 1050px) {
@@ -301,15 +313,11 @@ html, body {
 	.my_menu {
 		display: block;
 	}
-	.profile_box, .my_code, .monthly_code {
+	.my_code, .monthly_code {
 		margin: 30px auto;
 		width: 90%;
 	}
-	.profile_box {
-		height: 200px;
-		display: flex;
-		align-items: center;
-	}
+
 	#content_wrap{
 		height: auto;
 	}

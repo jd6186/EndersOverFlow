@@ -41,36 +41,37 @@
 		</header>
 		<section id="content_wrap">
 			<nav class="side_bar">
+				<div class="profile_box">
+					<div class="profile_img">
+						<img th:src="@{/img/IU.PNG}" alt="">
+					</div>
+					<div class="profile_content">
+						<table>
+							<tr>
+								<th>이　름</th>
+								<td>이지은</td>
+							</tr>
+							<tr>
+								<th>닉네임</th>
+								<td>IU</td>
+							</tr>
+							<tr>
+								<th>추천수</th>
+								<td>20000개</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<hr>
 				<ul>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
+					<a href="codeReview/list"><li>코드 리뷰</li></a>
+					<a href="#"><li>리뷰 순위</li></a>
+					<a href="#"><li>코드 팁스</li></a>
+					<a href="#"><li>코드 리뷰</li></a>
 				</ul>
 			</nav>
 			<div class="content">
 				<div class="my_menu">
-					<div class="profile_box">
-						<div class="profile_img">
-							<img th:src="@{/img/logo.PNG}" alt="">
-						</div>
-						<div class="profile_content">
-							<table>
-								<tr>
-									<th>이 름</th>
-									<td>동욱정</td>
-								</tr>
-								<tr>
-									<th>닉네임</th>
-									<td>맛맛맛</td>
-								</tr>
-								<tr>
-									<th>추천수</th>
-									<td>200개</td>
-								</tr>
-							</table>
-						</div>
-					</div>
 					<div class="my_code">
 						<h2>내 최근 게시물</h2>
 						<table>
@@ -92,27 +93,50 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-				<div class="monthly_code">
-					<h2>이 달의 코드리뷰 왕</h2>
-					<table>
-						<thead>
-							<tr>
-								<th>순위</th>
-								<th>닉네임</th>
-								<th>추천수</th>
-								<th>리뷰수</th>
-							<tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>킴덕배</td>
-								<td>30</td>
-								<td>5개</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="monthly_king">
+						<div class="monthly_code">
+							<h2>이 달의 코드리뷰</h2>
+							<table>
+								<thead>
+									<tr>
+										<th>순위</th>
+										<th>닉네임</th>
+										<th>추천수</th>
+										<th>리뷰수</th>
+									<tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>킴덕배</td>
+										<td>30</td>
+										<td>5개</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="monthly_tips">
+							<h2>이 달의 코드 팁스</h2>
+							<table>
+								<thead>
+									<tr>
+										<th>순위</th>
+										<th>닉네임</th>
+										<th>추천수</th>
+										<th>리뷰수</th>
+									<tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>킴덕배</td>
+										<td>30</td>
+										<td>5개</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
