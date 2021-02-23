@@ -138,7 +138,7 @@ html, body {
 }
 /*------------------ 위에는 css 초기화 --------------------*/
 .side_bar {
-	width: 228px;
+	width: 250px;
 	height: 100%;
 	border-right: 1px solid #dfe5eb;
 	margin-top: 0px;
@@ -267,7 +267,7 @@ html, body {
 	margin: 5px
 }
 
-.monthly_king{
+.monthly_king {
 	width: 35%;
 	margin: 5px;
 	height: 500px;
@@ -280,15 +280,15 @@ html, body {
 	width: 100%;
 	height: 200px;
 	text-align: center;
-	
 }
+
 .monthly_tips {
 	width: 100%;
 	height: 200px;
 	text-align: center;
 }
 
-.monthly_code, .my_code, .monthly_tips{
+.monthly_code, .my_code, .monthly_tips {
 	background-color: #e9ecef;
 	border: 1px solid #bbbbbb;
 	border-radius: 5px;
@@ -313,12 +313,18 @@ html, body {
 	.my_menu {
 		display: block;
 	}
-	.my_code, .monthly_code {
-		margin: 30px auto;
-		width: 90%;
+	.monthly_king {
+		width: 100%;
+		display: block;
 	}
-
-	#content_wrap{
+	.my_code, .monthly_code, .monthly_tips {
+		width: 100%;
+		margin-top: 5px;
+	}
+	.my_code{
+		height: 200px;
+	}
+	#content_wrap {
 		height: auto;
 	}
 }

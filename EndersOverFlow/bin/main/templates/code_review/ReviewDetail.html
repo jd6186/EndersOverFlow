@@ -1,152 +1,130 @@
 <!DOCTYPE html>
 <html xmlns:th="http:www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/codeReviewDetail.css}" />
-<title>CodeDetail</title>
+<div th:replace="/fragments/meta.html :: fragment-meta"></div>
 </head>
 
 <body>
-	<script th:inline="javascript">
-		/*<![CDATA[*/
-		function openToggle() {
-			const mo_header = document.getElementById("mo_h");
-			mo_header.style.display = mo_header.style.display === "block" ? "none"
-					: "block"
-		}
-		/*]]>*/
-	</script>
 	<section id="wrap">
-		<header id="header_wrap">
-			<div class="header_box">
-				<div class="logo_box">
-					<img th:src="@{/img/logo.PNG}" alt=""> <a href="/"><h1>EndersOverFlow</h1></a>
-				</div>
-				<div class="login_box">
-					<a href="/member/login">로그인</a>
-				</div>
-				<div class="list_btn">
-					<img th:src="@{/img/list_btn.PNG}" alt=""
-						th:onclick="javascript:openToggle()">
-				</div>
-				<div class="mobile_header" id="mo_h">
-					<ul>
-						<li><a href="#">ㅎㅇ</a></li>
-						<li><a href="#">ㅎㅇ</a></li>
-						<li><a href="#">ㅎㅇ</a></li>
-					</ul>
-				</div>
-			</div>
-		</header>
+		<div th:replace="/fragments/header.html :: fragment-header"></div>
 		<section id="content_wrap">
-			<nav class="side_bar">
-				<ul>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
-					<li>코드리뷰</li>
-				</ul>
-			</nav>
+			<div th:replace="/fragments/side.html :: fragment-side"></div>
 			<div class="content">
 				<!-- TODO 값을 전달 받으면 아래 div는 삭제하고 주석 해제 -->
 				<div class="codeReviewDetailArea">
 					<header class="detail_context">
-						<span th:text="타이틀" style="margin: auto 0px;"></span>
-						<img alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
+						<span th:text="타이틀" style="margin: auto 0px;"></span> <img
+							alt="스타" th:src="@{/img/빈별.png}"
+							th:onclick="starChange(${item.isStar})" style="width: 20px;">
 					</header>
 					<header class="detail_context" style="margin-top: 20px">
-						<span th:text="Row_숫자"></span>
-						<span th:text=" lines "></span>
+						<span th:text="Row_숫자"></span> <span th:text=" lines "></span>
 						<!-- TODO : 이미지 누르면 수정페이지로 교체하기 textAreaEdit 내부에 있는 내용을 CK에디터로 교체만 하면 됌-->
-						<img alt="edit" th:src="@{/img/edit.png}" th:onclick="starChange(${item.isStar})" style="width: 20px; float: right;">
+						<img alt="edit" th:src="@{/img/edit.png}"
+							th:onclick="starChange(${item.isStar})"
+							style="width: 20px; float: right;">
 					</header>
 					<div class="textAreaEdit">
 						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '1')">텍스트 텍스트</p>
-							<div class="commentManage" th:id="1" style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments">
-								</div>
+							<p class="commentYN commentN" onclick="commentView(event, '1')">텍스트
+								텍스트</p>
+							<div class="commentManage" th:id="1"
+								style="display: none; padding-left: 15px;">
+								<div class="codeReviewTextLineComments"></div>
 								<div class="commentManageFixedAe">
 									<p class="codeReviewTextLinePTag">Comments</p>
 									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows="" cols=""  placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
+										<textarea class="codeReviewTextLine textareaTag" rows=""
+											cols="" placeholder="Add an optional extended description…"></textarea>
+										<button class="codeReviewTextLine buttonTag"
+											style="width: 9%; height: 30px">등록</button>
 									</div>
 								</div>
 							</div>
-						</article> 
+						</article>
 						<article class="textLines">
-							<p class="commentYN commentY" onclick="commentView(event, '2')">텍스트 텍스트</p>
-							<div class="commentManage" th:id="2" style="display: none; padding-left: 15px;">
+							<p class="commentYN commentY" onclick="commentView(event, '2')">텍스트
+								텍스트</p>
+							<div class="commentManage" th:id="2"
+								style="display: none; padding-left: 15px;">
 								<div class="codeReviewTextLineComments">
 									<div class="codeReviewTextLineComments commentArea">
 										<span class="codeReviewTextLineComments span" th:text="정동욱"></span>
-										<img class="codeReviewTextLineComments img" alt="스타" th:src="@{/img/빈별.png}"  style="width: 20px;">
+										<img class="codeReviewTextLineComments img" alt="스타"
+											th:src="@{/img/빈별.png}" style="width: 20px;">
 										<div>
 											<p th:text="댓글댓글"></p>
 										</div>
 									</div>
 									<div class="codeReviewTextLineComments commentArea">
 										<span class="codeReviewTextLineComments span" th:text="이재민"></span>
-										<img class="codeReviewTextLineComments img" alt="스타" th:src="@{/img/빈별.png}"  style="width: 20px;">
+										<img class="codeReviewTextLineComments img" alt="스타"
+											th:src="@{/img/빈별.png}" style="width: 20px;">
 										<div class="codeReviewTextLineComments div">
-											<p class="codeReviewTextLineComments comments" th:text="댓글댓글댓글댓글"></p>
+											<p class="codeReviewTextLineComments comments"
+												th:text="댓글댓글댓글댓글"></p>
 										</div>
 									</div>
 								</div>
 								<div class="commentManageFixedAe">
 									<p class="codeReviewTextLinePTag">Comments</p>
 									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows="" cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
+										<textarea class="codeReviewTextLine textareaTag" rows=""
+											cols="" placeholder="Add an optional extended description…"></textarea>
+										<button class="codeReviewTextLine buttonTag"
+											style="width: 9%; height: 30px">등록</button>
 									</div>
 								</div>
 							</div>
-						</article> 
+						</article>
 						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '3')">텍스트 텍스트</p>
-							<div class="commentManage" th:id="3" style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments">
-								</div>
+							<p class="commentYN commentN" onclick="commentView(event, '3')">텍스트
+								텍스트</p>
+							<div class="commentManage" th:id="3"
+								style="display: none; padding-left: 15px;">
+								<div class="codeReviewTextLineComments"></div>
 								<div class="commentManageFixedAe">
 									<p class="codeReviewTextLinePTag">Comments</p>
 									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows="" cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
+										<textarea class="codeReviewTextLine textareaTag" rows=""
+											cols="" placeholder="Add an optional extended description…"></textarea>
+										<button class="codeReviewTextLine buttonTag"
+											style="width: 9%; height: 30px">등록</button>
 									</div>
 								</div>
 							</div>
-						</article> 
+						</article>
 						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '4')">텍스트 텍스트</p>
-							<div class="commentManage" th:id="4" style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments">
-								</div>
+							<p class="commentYN commentN" onclick="commentView(event, '4')">텍스트
+								텍스트</p>
+							<div class="commentManage" th:id="4"
+								style="display: none; padding-left: 15px;">
+								<div class="codeReviewTextLineComments"></div>
 								<div class="commentManageFixedAe">
 									<p class="codeReviewTextLinePTag">Comments</p>
 									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows="" cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
+										<textarea class="codeReviewTextLine textareaTag" rows=""
+											cols="" placeholder="Add an optional extended description…"></textarea>
+										<button class="codeReviewTextLine buttonTag"
+											style="width: 9%; height: 30px">등록</button>
 									</div>
 								</div>
 							</div>
-						</article> 
+						</article>
 					</div>
-					
+
 					<footer class="reviewDetailFooter" style="margin-top: 20px">
 						<div class="codeReviewComments">
 							<div class="commentArea">
-								<span th:text="정동욱"></span>
-								<img alt="스타" th:src="@{/img/빈별.png}"  style="width: 20px;">
+								<span th:text="정동욱"></span> <img alt="스타"
+									th:src="@{/img/빈별.png}" style="width: 20px;">
 								<div>
 									<p th:text="댓글댓글"></p>
 								</div>
 							</div>
 							<div class="commentArea">
-								<span th:text="이재민"></span>
-								<img alt="스타" th:src="@{/img/빈별.png}"  style="width: 20px;">
+								<span th:text="이재민"></span> <img alt="스타"
+									th:src="@{/img/빈별.png}" style="width: 20px;">
 								<div>
 									<p th:text="글댓글댓"></p>
 								</div>
@@ -155,12 +133,14 @@
 						<div class="commentMainManage">
 							<p class="codeReviewTextLinePTag">Comments</p>
 							<div style="margin-top: 10px">
-								<textarea class="textareaTag" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
+								<textarea class="textareaTag" rows="" cols=""
+									style="width: 90%;"
+									placeholder="Add an optional extended description…"></textarea>
 								<button style="width: 9%; height: 30px">등록</button>
 							</div>
 						</div>
 					</footer>
-				<!--
+					<!--
 					// TODO
 					// 데이터 넘어오면 아래 내용으로 대체
 					<header class="detail_context">
@@ -228,20 +208,20 @@
 			// star 글 목록에서 해당 글의 star수를 +1 시키기 
 		}
 	}
-	function commentView(event, id){
-		if (document.getElementById(id).style.display=="none"){
-			for (var i in document.getElementsByClassName("commentManage")){
+	function commentView(event, id) {
+		if (document.getElementById(id).style.display == "none") {
+			for ( var i in document.getElementsByClassName("commentManage")) {
 				if (i == "length") {
 					break;
 				}
-				document.getElementsByClassName("commentManage")[i].style['display']="none"
+				document.getElementsByClassName("commentManage")[i].style['display'] = "none"
 			}
-			document.getElementById(id).style.display="block";
-		} else if (document.getElementById(id).style.display=="block"){
-			document.getElementById(id).style.display="none";
+			document.getElementById(id).style.display = "block";
+		} else if (document.getElementById(id).style.display == "block") {
+			document.getElementById(id).style.display = "none";
 		}
 	}
-	function commentSearch(id){
+	function commentSearch(id) {
 		// TODO
 		// ${codeReviewNo}와 id를 이용해서 해당 텍스트라인의 댓글 정보를 불러오기
 		// 없으면 그냥 return 있으면 해당 정보를 document.getElementById(id) 안에 innerHTML로 집어넣어주기
@@ -255,7 +235,7 @@
 		// </div>
 		// 이런식으로 작동 될 수 있게 태그를 붙여넣기
 	}
-	function codeReviewCommentSearch(){
+	function codeReviewCommentSearch() {
 		// TODO
 		// 이 페이지로 진입하자마자 ${codeReviewNo}를 이용해 이글에 대한 댓글을 조사해서 제일 하단에 입력해주기
 		// <div class="commentArea" th:each="commentItem : ${commentList}" th:text="${commentItem}">
@@ -268,21 +248,33 @@
 		// </div>
 		// 이런식으로 작동 될 수 있게 태그를 붙여넣기
 	}
-	document.getElementsByTagName('body')[0].addEventListener('click', function(event){
-		console.log(event.target.className.indexOf("codeReviewTextLineComments"));
-		if (event.target.className.indexOf('commentManage') || event.target.className.indexOf("codeReviewTextLineComments") != -1 || event.target.className.indexOf("codeReviewTextLine") != -1){
-			return
-		} else if (event.target.className == 'commentYN'){
-			return
-		} else{
-			for (var i in document.getElementsByClassName("commentManage")){
-				if (i == "length") {
-					break;
-				}
-				document.getElementsByClassName("commentManage")[i].style['display']="none"
-			}
-		}
-		
-    });
+	document.getElementsByTagName('body')[0]
+			.addEventListener(
+					'click',
+					function(event) {
+						console.log(event.target.className
+								.indexOf("codeReviewTextLineComments"));
+						if (event.target.className.indexOf('commentManage')
+								|| event.target.className
+										.indexOf("codeReviewTextLineComments") != -1
+								|| event.target.className
+										.indexOf("codeReviewTextLine") != -1) {
+							return
+
+						} else if (event.target.className == 'commentYN') {
+							return
+
+						} else {
+							for ( var i in document
+									.getElementsByClassName("commentManage")) {
+								if (i == "length") {
+									break;
+								}
+								document
+										.getElementsByClassName("commentManage")[i].style['display'] = "none"
+							}
+						}
+
+					});
 </script>
 </html>

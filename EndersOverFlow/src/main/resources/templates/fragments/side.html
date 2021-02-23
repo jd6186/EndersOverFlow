@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http:www.thymeleaf.org">
+	<nav class="side_bar" th:fragment="fragment-side">
+		<div class="profile_box">
+			<div class="profile_img">
+				<img th:src="@{/img/IU.PNG}" alt="">
+			</div>
+			<div class="profile_content">
+				<table>
+					<tr>
+						<th>이 름</th>
+						<td>이지은</td>
+					</tr>
+					<tr>
+						<th>닉네임</th>
+						<td>IU</td>
+					</tr>
+					<tr>
+						<th>추천수</th>
+						<td>20000개</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<hr>
+		<ul>
+			<a href="codeReview/list"><li>코드 리뷰</li></a>
+			<a href="#"><li>리뷰 순위</li></a>
+			<a href="#"><li>코드 팁스</li></a>
+			<a href="#"><li>코드 리뷰</li></a>
+		</ul>
+	</nav>
+</html>
