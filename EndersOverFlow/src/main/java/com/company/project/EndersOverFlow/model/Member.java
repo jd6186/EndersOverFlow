@@ -1,5 +1,7 @@
 package com.company.project.EndersOverFlow.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.*;
 
 @Entity(name = "ENDERS_MEMBER")
@@ -7,87 +9,100 @@ public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long MBR_NO;
-	private String MBR_ID;
-	private String MBR_NAME;
+	private String MBR_EMAIL;
+	private String MBR_PASSWORD;
+	private String MBR_NICNAME;
+	private String MBR_AUTH;
+	private LocalDate MBR_SIGNUP_DATE;
+	private LocalDate MBR_PASSWORD_UPDATE_DATE;
 
 	public Member() {
 	}
 
-	public Member(String id, String name) {
-		this.MBR_ID = id;
-		this.MBR_NAME = name;
+	public Member(Long mBR_NO, String mBR_EMAIL, String mBR_PASSWORD, String mBR_NICNAME, String mBR_AUTH,
+			LocalDate mBR_SIGNUP_DATE, LocalDate mBR_PASSWORD_UPDATE_DATE) {
+		super();
+		MBR_NO = mBR_NO;
+		MBR_EMAIL = mBR_EMAIL;
+		MBR_PASSWORD = mBR_PASSWORD;
+		MBR_NICNAME = mBR_NICNAME;
+		MBR_AUTH = mBR_AUTH;
+		MBR_SIGNUP_DATE = mBR_SIGNUP_DATE;
+		MBR_PASSWORD_UPDATE_DATE = mBR_PASSWORD_UPDATE_DATE;
 	}
 
-	public Member(Long no, String id, String name) {
-		this.MBR_NO = no;
-		this.MBR_ID = id;
-		this.MBR_NAME = name;
+	public Member(Long mBR_NO, String mBR_EMAIL, String mBR_PASSWORD, String mBR_NICNAME, String mBR_AUTH) {
+		super();
+		MBR_NO = mBR_NO;
+		MBR_EMAIL = mBR_EMAIL;
+		MBR_NICNAME = mBR_NICNAME;
+		MBR_PASSWORD = mBR_PASSWORD;
+		MBR_AUTH = mBR_AUTH;
 	}
 
-	public Long getMbrNo() {
+	public Long getMBR_NO() {
 		return MBR_NO;
 	}
 
-	public void setMbrNo(Long mbrNo) {
-		this.MBR_NO = mbrNo;
+	public void setMBR_NO(Long mBR_NO) {
+		MBR_NO = mBR_NO;
 	}
 
-	public String getId() {
-		return MBR_ID;
+	public String getMBR_EMAIL() {
+		return MBR_EMAIL;
 	}
 
-	public void setId(String id) {
-		this.MBR_ID = id;
+	public void setMBR_EMAIL(String mBR_EMAIL) {
+		MBR_EMAIL = mBR_EMAIL;
 	}
 
-	public String getName() {
-		return MBR_NAME;
+	public String getMBR_PASSWORD() {
+		return MBR_PASSWORD;
 	}
 
-	public void setName(String name) {
-		this.MBR_NAME = name;
+	public void setMBR_PASSWORD(String mBR_PASSWORD) {
+		MBR_PASSWORD = mBR_PASSWORD;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((MBR_ID == null) ? 0 : MBR_ID.hashCode());
-		result = prime * result + ((MBR_NO == null) ? 0 : MBR_NO.hashCode());
-		result = prime * result + ((MBR_NAME == null) ? 0 : MBR_NAME.hashCode());
-		return result;
+	public String getMBR_NICNAME() {
+		return MBR_NICNAME;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Member other = (Member) obj;
-		if (MBR_ID == null) {
-			if (other.MBR_ID != null)
-				return false;
-		} else if (!MBR_ID.equals(other.MBR_ID))
-			return false;
-		if (MBR_NO == null) {
-			if (other.MBR_NO != null)
-				return false;
-		} else if (!MBR_NO.equals(other.MBR_NO))
-			return false;
-		if (MBR_NAME == null) {
-			if (other.MBR_NAME != null)
-				return false;
-		} else if (!MBR_NAME.equals(other.MBR_NAME))
-			return false;
-		return true;
+	public void setMBR_NICNAME(String mBR_NICNAME) {
+		MBR_NICNAME = mBR_NICNAME;
+	}
+
+	public String getMBR_AUTH() {
+		return MBR_AUTH;
+	}
+
+	public void setMBR_AUTH(String mBR_AUTH) {
+		MBR_AUTH = mBR_AUTH;
+	}
+
+	public LocalDate getMBR_SIGNUP_DATE() {
+		return MBR_SIGNUP_DATE;
+	}
+
+	public void setMBR_SIGNUP_DATE(LocalDate mBR_SIGNUP_DATE) {
+		MBR_SIGNUP_DATE = mBR_SIGNUP_DATE;
+	}
+
+	public LocalDate getMBR_PASSWORD_UPDATE_DATE() {
+		return MBR_PASSWORD_UPDATE_DATE;
+	}
+
+	public void setMBR_PASSWORD_UPDATE_DATE(LocalDate mBR_PASSWORD_UPDATE_DATE) {
+		MBR_PASSWORD_UPDATE_DATE = mBR_PASSWORD_UPDATE_DATE;
 	}
 
 	@Override
 	public String toString() {
-		return "Member [MBR_NO=" + MBR_NO + ", MBR_ID=" + MBR_ID + ", MBR_NAME=" + MBR_NAME + "]";
+		return "Member [MBR_NO=" + MBR_NO + ", MBR_EMAIL=" + MBR_EMAIL + ", MBR_PASSWORD=" + MBR_PASSWORD
+				+ ", MBR_NICNAME=" + MBR_NICNAME + ", MBR_AUTH=" + MBR_AUTH + ", MBR_SIGNUP_DATE=" + MBR_SIGNUP_DATE
+				+ ", MBR_PASSWORD_UPDATE_DATE=" + MBR_PASSWORD_UPDATE_DATE + "]";
 	}
+
+	
 
 }

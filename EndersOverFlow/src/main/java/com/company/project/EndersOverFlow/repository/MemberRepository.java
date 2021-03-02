@@ -6,4 +6,6 @@ import com.company.project.EndersOverFlow.model.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
+//	Member findById(String mBR_EMAIL);
 }
