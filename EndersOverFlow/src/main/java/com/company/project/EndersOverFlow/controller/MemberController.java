@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.tags.Param;
 
@@ -45,32 +46,28 @@ public class MemberController {
         return new ModelAndView("member_page/Login");
 	}
 	
-	@RequestMapping("dologin")
-	public String doLoginPage(@Validated Member member){
+	@PostMapping(path = "/dologin")
+	public String doLoginPage(@Validated String emailField, @Validated String passwordField){
 		System.out.println("login 페이지 진입");
-		System.out.println(member.getMBR_EMAIL());
-		System.out.println(member.getMBR_PASSWORD());
-        Member searchMember = memberService.findMember(member.getMBR_EMAIL());
-        if (searchMember.getMBR_PASSWORD().equals(member.getMBR_PASSWORD())) {
+        Member searchMember = memberService.findMember(emailField);
+        if (searchMember.getMBR_PASSWORD().equals(passwordField)) {
     		return "/index";
         }
-		return "member_page/Login";
+		return "redirect:/Login";
 	}
 
 	// 회원 입력
 	@PostMapping(path = "/signUpMember")
 	public String signupPage(@Validated Member member){
 		System.out.println("signupPage 페이지 진입");
-        member.getMBR_EMAIL();
-        member.getMBR_PASSWORD();
-        member.getMBR_NICNAME();
-        member.getMBR_AUTH();
-
+		// Client단으로 부터 member Data가 정상적으로 넘어오는 것 확인
 		LocalDate nowDate = LocalDate.now();
+		member.setMBR_EMAIL(member.getMBR_EMAIL().split("@")[0]);
         member.setMBR_SIGNUP_DATE(nowDate);
         member.setMBR_PASSWORD_UPDATE_DATE(nowDate);
         memberService.doSignUp(member);
-		return "member_page/Login";
+        System.out.println("여기까진 실행됐네?");
+		return "redirect:/Login";
 	}
 
 
@@ -81,24 +78,30 @@ public class MemberController {
 		List<Member> member = memberService.findAll();
 		model.addAttribute("memeber", member);
 		System.out.println(model.getAttribute("memeber"));
-		return "member_page/SignUpPage";
+		return "redirect:/SignUpPage";
 	}
 
 	// 회원번호로 한명의 회원 조회
 	@RequestMapping("/emailCheck")
-	public ResponseEntity<Member> getMember(String MBR_EMAIL) {
+	public ResponseEntity emailCheck(@RequestParam(value="MBR_EMAIL", required=false, defaultValue="value_is_null") String emailField) {
 		System.out.println("회원 중복 확인 페이지 진입");
-		System.out.println(MBR_EMAIL);
-		Member member = memberService.findMember(MBR_EMAIL);
-		return new ResponseEntity<Member>(member, HttpStatus.OK);
+		String[] splitData = emailField.split("@");
+		Member member = memberService.findMember(splitData[0]);
+		if (member == null) {
+			return new ResponseEntity("해당 아이디에 대한 member가 존재하지 않습니다.", HttpStatus.OK);
+		}
+		if (!splitData[1].equals("enders.co.kr")) {
+			return new ResponseEntity("엔더스이메일을 사용해주십시요.", HttpStatus.NOT_MODIFIED);
+		}
+		return new ResponseEntity("해당 이메일은 사용이 불가능합니다.", HttpStatus.BAD_REQUEST);
 	}
 	
 	// 회원번호로 회원 수정(mbrNo로 회원을 찾아 Member 객체의 id, name로 수정함)
 	@PostMapping(value = "/doMemberUpdate")
-	public Boolean updateMember(String MBR_EMAIL, String MBR_PASSWORD, String MBR_NEW_PASSWORD, Member member) {
+	public ResponseEntity updateMember(String MBR_EMAIL, String MBR_PASSWORD, String MBR_NEW_PASSWORD, Member member) {
 		boolean result = false;
 		result = memberService.passwordUpdate(MBR_EMAIL, MBR_PASSWORD, MBR_NEW_PASSWORD, member);
-		return result;
+		return new ResponseEntity("정보 수정이 완료되었습니다.", HttpStatus.OK);
 	}
 
 	// 회원번호로 회원 삭제

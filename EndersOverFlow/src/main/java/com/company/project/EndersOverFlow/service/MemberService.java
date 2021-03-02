@@ -37,21 +37,18 @@ public class MemberService{
 
 	public Member findMember (String MBR_EMAIL) { 
 		System.out.println("findMember Service 진입");
-		String rowQuery = "select m from ENDERS_MEMBER m where MBR_EMAIL=:MBR_EMAIL"; 
+		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_EMAIL='" + MBR_EMAIL + "'"; 
 		try {
 			Member member = entityManager.createQuery(rowQuery, Member.class)
-					.setParameter("MBR_EMAIL", MBR_EMAIL)
 					.getSingleResult();
-			System.out.println("findMember Service member");
-			System.out.println(member.getMBR_EMAIL());
 			return member;
 		} catch (NoResultException e) {
-			System.out.println("데이터가 없습니다.");
+			System.out.println("데이터가 없습니다." + e);
 		}
 		return null;
 	}
 	
-	public Boolean memberCheck (String MBR_EMAIL, String MBR_PASSWORD) { 
+	public Boolean loginCheck (String MBR_EMAIL, String MBR_PASSWORD) { 
 		System.out.println("memberCheck Service 진입");
 		String rowQuery = "select m from ENDERS_MEMBER m where MBR_EMAIL=:MBR_EMAIL and MBR_PASSWORD=:MBR_PASSWORD"; 
 		Member member = entityManager.createQuery(rowQuery, Member.class)

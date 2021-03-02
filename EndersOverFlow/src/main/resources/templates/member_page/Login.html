@@ -16,15 +16,15 @@
                     <button type="button" class="togglebtn" onclick="login()">LOG IN</button>
                     <button type="button" class="togglebtn" onclick="register()">REGISTER</button>
                 </div>
-                <form id="login" th:action="@{/dologin}" th:object="${member}" class="input-group" action="#">
-                    <input type="text" th:field="*{MBR_EMAIL}" id="emailField" class="input-field" placeholder="Enter Email" required>
-                    <input type="password" th:field="*{MBR_PASSWORD}" class="input-field" placeholder="Enter Password" required>
+                <form id="login" th:action="@{/member/dologin}" class="input-group" action="#" method="post">
+                    <input type="text" name="emailField" id="emailField" class="input-field" placeholder="Enter Email" required>
+                    <input type="password" name="passwordField" id="passwordField" class="input-field" placeholder="Enter Password" required>
                     <input type="checkbox" class="checkbox"><span>Remember Password</span>
-                    <button class="submit" style="margin-top: 20px;">Login</button>
+                    <button type="submit" class="submitButton" style="margin-top: 20px;">Login</button>
                 </form>
-                <form id="register" th:action="@{/signUpMember}" th:object="${member}" name="signUpData" method="post" class="input-group">
-                    <input type="email" th:field="*{MBR_EMAIL}" id="signupEmailField" class="input-field" placeholder="이메일 입력(example@enders.co.kr)" required>
-                    <button class="mama" style="margin-top: 7px; margin-bottom: 10px;" onclick="doEmailCheck(); return false;">중복검사</button>
+                <form id="register" th:action="@{/member/signUpMember}" th:object="${member}" name="signUpData" method="post" class="input-group">
+                    <input type="email"  th:field="*{MBR_EMAIL}" id="signupEmailField" class="input-field" placeholder="엔더스 이메일 입력(example@enders.co.kr)" required>
+                    <button style="margin-top: 7px; margin-bottom: 10px;" onclick="doEmailCheck(); return false;">중복검사</button>
                     <input type="text" th:field="*{MBR_NICNAME}" class="input-field" placeholder="닉네임 입력" required>
                     <input type="password" th:field="*{MBR_PASSWORD}" class="input-field" placeholder="영문/숫자/특수문자(선택) 조합 8~20자리 비밀번호 설정" required>
                     <input type="password" class="input-field" placeholder="비밀번호 확인" required>
@@ -36,7 +36,6 @@
             var x = document.getElementById("login");
             var y = document.getElementById("register");
             var z = document.getElementById("btn");
-            
             function login(){
                 x.style.left = "50px";
                 y.style.left = "450px";
@@ -52,18 +51,29 @@
             function doEmailCheck(){
             	let httpRequest = new XMLHttpRequest();
 
-
                 httpRequest.onreadystatechange = function () {
-               	    if (this.readyState != 4) return
+
+            		if (this.readyState > 2) {
+            			return;
+            		}
+            	    console.log(this)
+               	    if (this.status == 304) {
+               	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
+               	    	document.getElementById("signupEmailField").value = "";
+               	    }
                	    if (this.status == 200) {
-               	    	console.log(this);
+               	    	alert("사용가능한 아이디 입니다.");
+               	    }
+               	    if (this.status == 400) {
+               	    	alert("중복되는 아이디가 있습니다.");
+               	    	document.getElementById("emailField").value = "";
+               	    	document.getElementById("emailField").value = "";
                	    }
            	    }
-
-            	httpRequest.open("GET", "/member/emailCheck");
-           	 	httpRequest.send(JSON.stringify({ 'MBR_EMAIL': document.getElementById("signupEmailField").value}));
-           	 	
-           	}
+            	httpRequest.open("GET", "/member/emailCheck?MBR_EMAIL=" + document.getElementById("signupEmailField").value);
+           	 	httpRequest.send();
+           	}	
+            
         </script>
     </body>
 </html> 
