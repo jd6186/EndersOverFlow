@@ -52,23 +52,20 @@
             	let httpRequest = new XMLHttpRequest();
 
                 httpRequest.onreadystatechange = function () {
-
-            		if (this.readyState > 2) {
-            			return;
+            		if (this.readyState == 4) {
+            			if (this.responseText == "emailFalse") {
+                   	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
+                   	    	document.getElementById("signupEmailField").value = "";
+                   	    }
+                   	    if (this.responseText == "true") {
+                   	    	alert("사용가능한 아이디 입니다.");
+                   	    }
+                   	    if (this.responseText == "false") {
+                   	    	alert("중복되는 아이디가 있습니다.");
+                   	    	document.getElementById("emailField").value = "";
+                   	    	document.getElementById("emailField").value = "";
+                   	    }
             		}
-            	    console.log(this)
-               	    if (this.status == 304) {
-               	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
-               	    	document.getElementById("signupEmailField").value = "";
-               	    }
-               	    if (this.status == 200) {
-               	    	alert("사용가능한 아이디 입니다.");
-               	    }
-               	    if (this.status == 400) {
-               	    	alert("중복되는 아이디가 있습니다.");
-               	    	document.getElementById("emailField").value = "";
-               	    	document.getElementById("emailField").value = "";
-               	    }
            	    }
             	httpRequest.open("GET", "/member/emailCheck?MBR_EMAIL=" + document.getElementById("signupEmailField").value);
            	 	httpRequest.send();

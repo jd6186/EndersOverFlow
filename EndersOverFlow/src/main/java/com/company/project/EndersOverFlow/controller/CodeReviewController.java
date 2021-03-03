@@ -20,30 +20,35 @@ public class CodeReviewController {
 	@Autowired
 	com.company.project.EndersOverFlow.service.CodeReviewService codeReviewService;
 
-	// 코드리뷰 리스트 전체 목록 페이지로 이동
+	// 코드 리스트 전체 목록 페이지로 이동
 	@RequestMapping("list")
-	public String goCodeReviewListPage(Model model) {
+	public String goCodeListPage(Model model) {
 		logger.info("codeReviewList 조회 시작");
 
 		List<CodeReview> codeReview = codeReviewService.codeReviewFindAll();
 		model.addAttribute("codeReviewList", codeReview);
 
 		logger.info("codeReviewList 조회 종료");
-		return "code_review/ReviewList";
+		return "code_review/CodeList";
 	}
 
-	// 코드리뷰 상세글 페이지로 이동
+	// 코드 상세글 페이지로 이동
 	@RequestMapping("detail")
-	public String goCodeReviewDetailPage(Model model) {
+	public String goCodeDetailPage(Model model) {
 		logger.info("codeReviewDetail 조회 시작");
 
 		Long requestData = (long) 1;
 		Optional<CodeReview> codeReview = codeReviewService.codeReviewFindById(requestData);
 		model.addAttribute("codeReviewDetail", codeReview);
-		System.out.println(model.getAttribute("codeReviewDetail"));
 
 		logger.info("codeReviewDetail 조회 종료");
-		return "code_review/ReviewDetail";
+		return "code_review/CodeDetail";
 	}
 
+	// 코드글 작성 페이지로 이동
+	@RequestMapping("write")
+	public String goCodeReviewDetailPage(Model model) {
+		logger.info("codeWrite 페이지로 이동 시작");
+		return "code_review/CodeWrite";
+	}
 }

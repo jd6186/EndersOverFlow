@@ -48,67 +48,72 @@ public class MemberController {
 	
 	@PostMapping(path = "/dologin")
 	public String doLoginPage(@Validated String emailField, @Validated String passwordField){
-		System.out.println("login 페이지 진입");
+
+		logger.info("login 페이지 진입");
         Member searchMember = memberService.findMember(emailField);
         if (searchMember.getMBR_PASSWORD().equals(passwordField)) {
     		return "/index";
         }
-		return "redirect:/Login";
+		return "redirect:/member/login";
 	}
 
 	// 회원 입력
 	@PostMapping(path = "/signUpMember")
 	public String signupPage(@Validated Member member){
-		System.out.println("signupPage 페이지 진입");
-		// Client단으로 부터 member Data가 정상적으로 넘어오는 것 확인
+		logger.info("signupPage 페이지 진입");
 		LocalDate nowDate = LocalDate.now();
 		member.setMBR_EMAIL(member.getMBR_EMAIL().split("@")[0]);
         member.setMBR_SIGNUP_DATE(nowDate);
         member.setMBR_PASSWORD_UPDATE_DATE(nowDate);
         memberService.doSignUp(member);
-        System.out.println("여기까진 실행됐네?");
-		return "redirect:/Login";
+		return "redirect:/member/login";
 	}
 
 
 	// 전체 회원 조회
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	public String getAllmembers(Model model) {
-		System.out.println("전체 회원 조회 페이지 진입");
+		logger.info("전체 회원 조회 페이지 진입");
 		List<Member> member = memberService.findAll();
 		model.addAttribute("memeber", member);
-		System.out.println(model.getAttribute("memeber"));
+		logger.info("전체 회원 조회 페이지 정상 종료");
 		return "redirect:/SignUpPage";
 	}
 
 	// 회원번호로 한명의 회원 조회
 	@RequestMapping("/emailCheck")
 	public ResponseEntity emailCheck(@RequestParam(value="MBR_EMAIL", required=false, defaultValue="value_is_null") String emailField) {
-		System.out.println("회원 중복 확인 페이지 진입");
+		logger.info("회원 중복 확인 페이지 진입");
+		// 이메일 양식 체크
 		String[] splitData = emailField.split("@");
+		if (!splitData[1].equals("enders.co.kr")) {
+			return new ResponseEntity("emailFalse", HttpStatus.OK);
+		}
+		// 유저 체크
 		Member member = memberService.findMember(splitData[0]);
 		if (member == null) {
-			return new ResponseEntity("해당 아이디에 대한 member가 존재하지 않습니다.", HttpStatus.OK);
+			return new ResponseEntity("true", HttpStatus.OK);
 		}
-		if (!splitData[1].equals("enders.co.kr")) {
-			return new ResponseEntity("엔더스이메일을 사용해주십시요.", HttpStatus.NOT_MODIFIED);
-		}
-		return new ResponseEntity("해당 이메일은 사용이 불가능합니다.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity("false", HttpStatus.OK);
 	}
 	
 	// 회원번호로 회원 수정(mbrNo로 회원을 찾아 Member 객체의 id, name로 수정함)
 	@PostMapping(value = "/doMemberUpdate")
 	public ResponseEntity updateMember(String MBR_EMAIL, String MBR_PASSWORD, String MBR_NEW_PASSWORD, Member member) {
+		logger.info("회원번호로 회원 수정 페이지 진입");
 		boolean result = false;
 		result = memberService.passwordUpdate(MBR_EMAIL, MBR_PASSWORD, MBR_NEW_PASSWORD, member);
-		return new ResponseEntity("정보 수정이 완료되었습니다.", HttpStatus.OK);
+		logger.info("회원번호로 회원 수정 페이지 종료");
+		return new ResponseEntity(result, HttpStatus.OK);
 	}
 
 	// 회원번호로 회원 삭제
 	@DeleteMapping(value = "/{mbrNo}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> deleteMember(@PathVariable("mbrNo") Long mbrNo) {
+	public ResponseEntity deleteMember(@PathVariable("mbrNo") Long mbrNo) {
+		logger.info("회원번호로 회원 삭제 페이지 종료");
 		memberService.deleteById(mbrNo);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		logger.info("회원번호로 회원 수정 페이지 종료");
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 
