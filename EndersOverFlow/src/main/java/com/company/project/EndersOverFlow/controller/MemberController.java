@@ -46,15 +46,22 @@ public class MemberController {
         return new ModelAndView("member_page/Login");
 	}
 	
+	// 실제 로그인 진행
 	@PostMapping(path = "/dologin")
 	public String doLoginPage(@Validated String emailField, @Validated String passwordField){
-
 		logger.info("login 페이지 진입");
-        Member searchMember = memberService.findMember(emailField);
-        if (searchMember.getMBR_PASSWORD().equals(passwordField)) {
+		
+		// 이메일 정보로 맴버 확인하기
+		Member searchMember = memberService.findMember(emailField);
+		
+		// 맴버비밀번호 확인
+		if (searchMember.getMBR_PASSWORD().equals(passwordField)) {
+			// TOOD
+			// 여기서 조회된 회원의 권한을 확인해 이메일 인증을 안받은 사람은 여기서 이메일 인증을 받게 만들기
     		return "/index";
+        } else {
+        	return "redirect:/member/login";
         }
-		return "redirect:/member/login";
 	}
 
 	// 회원 입력

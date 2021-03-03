@@ -31,8 +31,12 @@ public class CodeReviewService {
 	}
 
 	public CodeReview save(CodeReview codeReview) {
-		codeReviewRepository.save(codeReview);
-		return codeReview;
+		try {
+			codeReviewRepository.save(codeReview);
+			return codeReview;
+		} catch (Exception e) {
+			return codeReview;
+		}
 	}
 
 	public void codeReviewUpdateById(Long CR_NO, CodeReview codeReview) {

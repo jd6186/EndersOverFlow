@@ -1,6 +1,8 @@
 package com.company.project.EndersOverFlow.model;
 
 
+import java.time.LocalDate;
+
 import javax.persistence.*;
 
 
@@ -14,16 +16,22 @@ public class CodeReview {
 	@JoinColumn(name = "ENDERS_MEMBER", referencedColumnName = "MBR_NO")
 	private Member CR_CREATER;
 	private String CR_CONTENTS;
-	private String CR_CREATEDAY;
-	private String CR_UPDATEDAY;
+	private LocalDate CR_CREATEDAY;
+	private LocalDate CR_UPDATEDAY;
 	private String CR_ISVIEW;
 	private Long CR_STAR_COUNT;
 
 	public CodeReview() {
 	}
 
-	public CodeReview(Long cR_NO, String cR_TITLE, Member cR_CREATER, String cR_CONTENTS, String cR_CREATEDAY,
-			String cR_UPDATEDAY, String cR_ISVIEW, Long cR_STAR_COUNT) {
+	public CodeReview(String cR_TITLE, String cR_CONTENTS) {
+		super();
+		CR_TITLE = cR_TITLE;
+		CR_CONTENTS = cR_CONTENTS;
+	}
+
+	public CodeReview(Long cR_NO, String cR_TITLE, Member cR_CREATER, String cR_CONTENTS, LocalDate cR_CREATEDAY,
+			LocalDate cR_UPDATEDAY, String cR_ISVIEW, Long cR_STAR_COUNT) {
 		super();
 		CR_NO = cR_NO;
 		CR_TITLE = cR_TITLE;
@@ -67,19 +75,19 @@ public class CodeReview {
 		CR_CONTENTS = cR_CONTENTS;
 	}
 
-	public String getCR_CREATEDAY() {
+	public LocalDate getCR_CREATEDAY() {
 		return CR_CREATEDAY;
 	}
 
-	public void setCR_CREATEDAY(String cR_CREATEDAY) {
-		CR_CREATEDAY = cR_CREATEDAY;
+	public void setCR_CREATEDAY(LocalDate nowDate) {
+		CR_CREATEDAY = nowDate;
 	}
 
-	public String getCR_UPDATEDAY() {
+	public LocalDate getCR_UPDATEDAY() {
 		return CR_UPDATEDAY;
 	}
 
-	public void setCR_UPDATEDAY(String cR_UPDATEDAY) {
+	public void setCR_UPDATEDAY(LocalDate cR_UPDATEDAY) {
 		CR_UPDATEDAY = cR_UPDATEDAY;
 	}
 
