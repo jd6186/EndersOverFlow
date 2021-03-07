@@ -15,6 +15,8 @@ public class Member {
 	private String MBR_AUTH;
 	private LocalDate MBR_SIGNUP_DATE;
 	private LocalDate MBR_PASSWORD_UPDATE_DATE;
+	private String MBR_LOGINUUID;
+	
 
 	public Member() {
 	}
@@ -94,6 +96,14 @@ public class Member {
 
 	public void setMBR_PASSWORD_UPDATE_DATE(LocalDate mBR_PASSWORD_UPDATE_DATE) {
 		MBR_PASSWORD_UPDATE_DATE = mBR_PASSWORD_UPDATE_DATE;
+	}
+
+	public String getMBR_LOGINUUID() {
+		return MBR_LOGINUUID;
+	}
+
+	public void setMBR_LOGINUUID(String mBR_LOGINUUID) {
+		MBR_LOGINUUID = mBR_LOGINUUID;
 	}
 
 	@Override

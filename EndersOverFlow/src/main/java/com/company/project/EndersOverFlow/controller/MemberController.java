@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.tags.Param;
 
@@ -33,6 +35,7 @@ import com.company.project.EndersOverFlow.model.Member;
 
 @Controller
 @RequestMapping("member")
+@SessionAttributes("userEmail")
 public class MemberController {
 	// 기본형
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -48,20 +51,31 @@ public class MemberController {
 	
 	// 실제 로그인 진행
 	@PostMapping(path = "/dologin")
-	public String doLoginPage(@Validated String emailField, @Validated String passwordField){
+	public String doLoginPage(Model model, @Validated String emailField, @Validated String passwordField){
 		logger.info("login 페이지 진입");
 		
 		// 이메일 정보로 맴버 확인하기
-		Member searchMember = memberService.findMember(emailField);
-		
-		// 맴버비밀번호 확인
-		if (searchMember.getMBR_PASSWORD().equals(passwordField)) {
-			// TOOD
-			// 여기서 조회된 회원의 권한을 확인해 이메일 인증을 안받은 사람은 여기서 이메일 인증을 받게 만들기
-    		return "/index";
-        } else {
+		try {
+
+			Member searchMember = memberService.findMember(emailField);
+			// 맴버비밀번호 확인
+			if (searchMember.getMBR_PASSWORD().equals(passwordField) && searchMember.getMBR_AUTH().equals("Y")) {
+				String uuid = UUID.randomUUID().toString();
+				searchMember.setMBR_LOGINUUID(uuid);
+				boolean result = memberService.loginUuidUpdate(searchMember);
+				if (result) {
+					model.addAttribute("userEmail", uuid);
+					return "/index";
+				} else {
+		        	return "redirect:/member/login";
+				}
+	        } else {
+	        	return "redirect:/member/login";
+	        }
+		} catch (Exception e) {
         	return "redirect:/member/login";
-        }
+		}
+		
 	}
 
 	// 회원 입력

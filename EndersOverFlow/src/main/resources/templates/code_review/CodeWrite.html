@@ -103,6 +103,7 @@ body > * ::-webkit-scrollbar {
            	    }
            	    if (this.responseText == "true") {
            	    	alert("해당 글이 정상적으로 등록되었습니다.");
+           	    	location.href="/codeReview/list";
            	    }
            	    if (this.responseText == "false") {
            	    	alert("제목과 내용은 모두 입력되어야합니다.");
@@ -111,11 +112,14 @@ body > * ::-webkit-scrollbar {
    	    }
     	httpRequest.open("POST", "/codeReview/doWrite", true);
     	httpRequest.setRequestHeader('Content-Type', 'application/json;');
-    	var codeReview = "{'CR_TITLE':title, 'CR_CONTENTS':title}"
-    	var jCodeReview = 
-    	console.log(jCodeReview.CR_TITLE);
+    	var codeReview = '{"CR_TITLE":"' + title.replace(/\s/g,'') + '", "CR_CONTENTS":"' + text.replace(/\s/g,'') + '"}'
+    	console.log(codeReview);
+    	
+    	// JSON으로 파싱하기
+   	    var codeReviewJSON = JSON.stringify(codeReview);
+    	console.log(codeReviewJSON);
  		/* CR_CONTENTS : text */
-   	 	httpRequest.send(jCodeReview);
+   	 	httpRequest.send(codeReview);
 	}
 	function codeCheck(object){
 		console.log('codeCheck 실행')
