@@ -248,33 +248,32 @@
 		// </div>
 		// 이런식으로 작동 될 수 있게 태그를 붙여넣기
 	}
-	document.getElementsByTagName('body')[0]
-			.addEventListener(
-					'click',
-					function(event) {
-						console.log(event.target.className
-								.indexOf("codeReviewTextLineComments"));
-						if (event.target.className.indexOf('commentManage')
-								|| event.target.className
-										.indexOf("codeReviewTextLineComments") != -1
-								|| event.target.className
-										.indexOf("codeReviewTextLine") != -1) {
-							return
+	document.getElementsByTagName('body')[0].addEventListener(
+		'click',
+		function(event) {
+			console.log(event.target.className
+					.indexOf("codeReviewTextLineComments"));
+			if (event.target.className.indexOf('commentManage')
+					|| event.target.className
+							.indexOf("codeReviewTextLineComments") != -1
+					|| event.target.className
+							.indexOf("codeReviewTextLine") != -1) {
+				return
 
-						} else if (event.target.className == 'commentYN') {
-							return
+			} else if (event.target.className == 'commentYN') {
+				return
 
-						} else {
-							for ( var i in document
-									.getElementsByClassName("commentManage")) {
-								if (i == "length") {
-									break;
-								}
-								document
-										.getElementsByClassName("commentManage")[i].style['display'] = "none"
-							}
-						}
+			} else {
+				for ( var i in document
+						.getElementsByClassName("commentManage")) {
+					if (i == "length") {
+						break;
+					}
+					document
+							.getElementsByClassName("commentManage")[i].style['display'] = "none"
+				}
+			}
 
-					});
+		});
 </script>
 </html>

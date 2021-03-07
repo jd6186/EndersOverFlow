@@ -48,7 +48,6 @@ public class CodeReviewController {
 		logger.info("codeReviewList 조회 시작");
 
 		List<CodeReview> codeReview = codeReviewService.codeReviewFindAll();
-		System.out.println(codeReview);
 		model.addAttribute("codeReviewList", codeReview);
 
 		logger.info("codeReviewList 조회 종료");
@@ -56,12 +55,13 @@ public class CodeReviewController {
 	}
 
 	// 코드 상세글 페이지로 이동
-	@RequestMapping("detail")
-	public String goCodeDetailPage(Model model) {
+	@GetMapping("/detail")
+	public String goCodeDetailPage(Model model, @RequestParam(value="CR_NO", required=false, defaultValue="0") String CR_NO) {
 		logger.info("codeReviewDetail 조회 시작");
 
-		Long requestData = (long) 1;
-		Optional<CodeReview> codeReview = codeReviewService.codeReviewFindById(requestData);
+		Long requestCR_NO = Long.parseLong(CR_NO);
+		CodeReview codeReview = codeReviewService.codeReviewFindById(requestCR_NO);
+		System.out.println(codeReview);
 		model.addAttribute("codeReviewDetail", codeReview);
 
 		logger.info("codeReviewDetail 조회 종료");
@@ -81,7 +81,7 @@ public class CodeReviewController {
 		
 		// 코드글 체크
 		Long CODE_NO_L = Long.parseLong(CODE_NO);
-		Optional<CodeReview> codeText = codeReviewService.codeReviewFindById(CODE_NO_L);
+		CodeReview codeText = codeReviewService.codeReviewFindById(CODE_NO_L);
 		System.out.println(codeText);
 		logger.info("수정할 codeText가 있습니다. codeUpdate 페이지로 이동");
         return new ModelAndView("code_review/CodeWrite");

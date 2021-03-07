@@ -21,8 +21,8 @@ public class CodeReviewService {
 		return codeReview;
 	}
 
-	public Optional<CodeReview> codeReviewFindById(Long CR_NO) {
-		Optional<CodeReview> codeReview = codeReviewRepository.findById(CR_NO);
+	public CodeReview codeReviewFindById(Long CR_NO) {
+		CodeReview codeReview = codeReviewRepository.getOne(CR_NO);
 		return codeReview;
 	}
 
