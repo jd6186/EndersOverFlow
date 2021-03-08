@@ -13,40 +13,28 @@
 				<!-- TODO 값을 전달 받으면 아래 div는 삭제하고 주석 해제 -->
 				<div class="codeReviewDetailArea">
 					<header class="detail_context">
-						<span th:text="타이틀" style="margin: auto 0px;"></span> <img
-							alt="스타" th:src="@{/img/빈별.png}"
-							th:onclick="starChange(${item.isStar})" style="width: 20px;">
+						<span th:text="${codeReviewDetail.CR_TITLE}" style="margin: auto 0px;"></span> 
+						<!-- 
+						TODO Star관련해서 이 글이 정보제공성 글일 경우에만 노출
+						<img alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;"> -->
 					</header>
 					<header class="detail_context" style="margin-top: 20px">
 						<span th:text="Row_숫자"></span> <span th:text=" lines "></span>
-						<!-- TODO : 이미지 누르면 수정페이지로 교체하기 textAreaEdit 내부에 있는 내용을 CK에디터로 교체만 하면 됌-->
-						<img alt="edit" th:src="@{/img/edit.png}"
-							th:onclick="starChange(${item.isStar})"
-							style="width: 20px; float: right;">
+						<img alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit()" style="width: 20px; float: right;">
 					</header>
-					<div class="textAreaEdit">
-						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '1')">텍스트
-								텍스트</p>
-							<div class="commentManage" th:id="1"
-								style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments"></div>
-								<div class="commentManageFixedAe">
-									<p class="codeReviewTextLinePTag">Comments</p>
-									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows=""
-											cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag"
-											style="width: 9%; height: 30px">등록</button>
-									</div>
-								</div>
-							</div>
-						</article>
-						<article class="textLines">
-							<p class="commentYN commentY" onclick="commentView(event, '2')">텍스트
-								텍스트</p>
-							<div class="commentManage" th:id="2"
-								style="display: none; padding-left: 15px;">
+					<div class="textAreaEdit" >
+						<article class="textLines" th:each="item, indexVal : ${codeTextList}">
+							<!-- 
+							TODO
+							댓글생성 및 작업이 완료되면 여기 수정해주기
+							<p class="commentYN commentY" th:if="${item.COMMENTYN} == 'Y'" th:text="${item}" th:onclick="commentView(event, ${indexVal.index})"></p>
+							<p class="commentYN commentN" th:if="${item.COMMENTYN} == 'N'" th:text="${item}"></p> -->
+							<p class="commentYN commentN" th:text="${item}"  th:onclick="commentView(event, [[${indexVal.index}]])"></p>
+							<div class="commentManage" th:id="${indexVal.index}" style="display: none; padding-left: 15px;">
+								<!-- 
+								TODO
+								해당 textLine에 해당하는 Comment가 있다면 붙여주기 
+								지금은 임시 샘플 넣어둔 것임-->
 								<div class="codeReviewTextLineComments">
 									<div class="codeReviewTextLineComments commentArea">
 										<span class="codeReviewTextLineComments span" th:text="정동욱"></span>
@@ -56,63 +44,26 @@
 											<p th:text="댓글댓글"></p>
 										</div>
 									</div>
-									<div class="codeReviewTextLineComments commentArea">
-										<span class="codeReviewTextLineComments span" th:text="이재민"></span>
-										<img class="codeReviewTextLineComments img" alt="스타"
-											th:src="@{/img/빈별.png}" style="width: 20px;">
-										<div class="codeReviewTextLineComments div">
-											<p class="codeReviewTextLineComments comments"
-												th:text="댓글댓글댓글댓글"></p>
-										</div>
-									</div>
+									<!-- 
+									TODO
+									이 위치에 div태그가 들어올 예정(댓글) -->
 								</div>
+								<!-- 
+								TODO
+								commentN이었던 class에 댓글이 달리면 자동으로 값이 N에서 Y로 바뀌게 해야함 -->
 								<div class="commentManageFixedAe">
 									<p class="codeReviewTextLinePTag">Comments</p>
 									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows=""
-											cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag"
-											style="width: 9%; height: 30px">등록</button>
+										<textarea class="codeReviewTextLine textareaTag" rows="" cols=""></textarea>
+										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
 									</div>
 								</div>
 							</div>
-						</article>
-						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '3')">텍스트
-								텍스트</p>
-							<div class="commentManage" th:id="3"
-								style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments"></div>
-								<div class="commentManageFixedAe">
-									<p class="codeReviewTextLinePTag">Comments</p>
-									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows=""
-											cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag"
-											style="width: 9%; height: 30px">등록</button>
-									</div>
-								</div>
-							</div>
-						</article>
-						<article class="textLines">
-							<p class="commentYN commentN" onclick="commentView(event, '4')">텍스트
-								텍스트</p>
-							<div class="commentManage" th:id="4"
-								style="display: none; padding-left: 15px;">
-								<div class="codeReviewTextLineComments"></div>
-								<div class="commentManageFixedAe">
-									<p class="codeReviewTextLinePTag">Comments</p>
-									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows=""
-											cols="" placeholder="Add an optional extended description…"></textarea>
-										<button class="codeReviewTextLine buttonTag"
-											style="width: 9%; height: 30px">등록</button>
-									</div>
-								</div>
-							</div>
-						</article>
+						</article> 
 					</div>
-
+					<!-- 
+					TODO
+					댓글 작성기능이 만들어지면 아래와 치환하기 -->
 					<footer class="reviewDetailFooter" style="margin-top: 20px">
 						<div class="codeReviewComments">
 							<div class="commentArea">
@@ -209,6 +160,7 @@
 		}
 	}
 	function commentView(event, id) {
+		console.log(id);
 		if (document.getElementById(id).style.display == "none") {
 			for ( var i in document.getElementsByClassName("commentManage")) {
 				if (i == "length") {
@@ -221,38 +173,9 @@
 			document.getElementById(id).style.display = "none";
 		}
 	}
-	function commentSearch(id) {
-		// TODO
-		// ${codeReviewNo}와 id를 이용해서 해당 텍스트라인의 댓글 정보를 불러오기
-		// 없으면 그냥 return 있으면 해당 정보를 document.getElementById(id) 안에 innerHTML로 집어넣어주기
-		// <div class="codeReviewTextLineComments commentArea" th:each="commentItem : ${commentList}" th:text="${commentItem}">
-		//		<span class="codeReviewTextLineComments span" th:text="commentItem.creater" style="margin: auto 0px;"></span>
-		//		<img class="codeReviewTextLineComments img" th:if="${commentItem.isStar} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
-		//		<img class="codeReviewTextLineComments img" th:if="${commentItem.isStar} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
-		//		<div class="codeReviewTextLineComments div">
-		//			<p class="codeReviewTextLineComments comments" th:text="commentItem.contents"></p>
-		//		</div>
-		// </div>
-		// 이런식으로 작동 될 수 있게 태그를 붙여넣기
-	}
-	function codeReviewCommentSearch() {
-		// TODO
-		// 이 페이지로 진입하자마자 ${codeReviewNo}를 이용해 이글에 대한 댓글을 조사해서 제일 하단에 입력해주기
-		// <div class="commentArea" th:each="commentItem : ${commentList}" th:text="${commentItem}">
-		//		<span th:text="commentItem.creater" style="margin: auto 0px;"></span>
-		//		<img th:if="${commentItem.isStar} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
-		//		<img th:if="${commentItem.isStar} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;">
-		//		<div>
-		//			<p th:text="commentItem.contents"></p>
-		//		</div>
-		// </div>
-		// 이런식으로 작동 될 수 있게 태그를 붙여넣기
-	}
 	document.getElementsByTagName('body')[0].addEventListener(
 		'click',
 		function(event) {
-			console.log(event.target.className
-					.indexOf("codeReviewTextLineComments"));
 			if (event.target.className.indexOf('commentManage')
 					|| event.target.className
 							.indexOf("codeReviewTextLineComments") != -1
@@ -276,4 +199,38 @@
 
 		});
 </script>
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		// TODO
+		// 현재 출력되는 형태는 DB에 저장된 그대로가 출력되고 있는데 DB에 저장할 때 
+		// 아예 `안쪽의 데이터를 제외한 나머지 영역에 대한 내용은 그냥 HTML테그를 제거하고 저장하고 
+		// `로 감싸진 부분에 있는데이터만 따로 HTML태그를 남겨서 저장하기
+		function escapeHTML(text) {
+			let map = {
+				'&amp;': '&',
+				'&lt;': '<',
+				'&gt;': '>',
+				'&quot;': '"',
+				"&#039;": "'"
+			};
+			for (item in map){
+				text = text.replaceAll(item, map[item]);
+			}
+			return text;
+		}
+		function charSelect(){
+			let result = "[[ ${codeReviewDetail} ]]"
+			let CR_CONTENTS = result.split("CR_CONTENTS=")[1].split(",")[0];
+	        let contents = escapeHTML(CR_CONTENTS);
+	        if(contents.indexOf("<br>") > 0){
+	        	let returnData = contents.split("<br>")
+	        	return returnData
+	        }
+        	return contents
+		}
+		window.onload = function(){
+			let result = charSelect();
+		}
+    </script>
+</th:block>
 </html>

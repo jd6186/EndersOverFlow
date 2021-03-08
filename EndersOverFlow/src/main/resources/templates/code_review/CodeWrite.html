@@ -76,6 +76,7 @@ body > * ::-webkit-scrollbar {
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 
 <script type="text/javascript">
+	
 	var editor = null;
 	var editData = false;
 	document.addEventListener('DOMContentLoaded', ()=> {
@@ -90,8 +91,6 @@ body > * ::-webkit-scrollbar {
 		var text = editor.getHtml();
 		var title = document.getElementById('title').value;
 		
-		console.log(text);
-		console.log(title);
 		let httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = function () {
@@ -111,16 +110,30 @@ body > * ::-webkit-scrollbar {
     		}
    	    }
     	httpRequest.open("POST", "/codeReview/doWrite", true);
-    	httpRequest.setRequestHeader('Content-Type', 'application/json;');
-    	var codeReview = '{"CR_TITLE":"' + title.replace(/\s/g,'') + '", "CR_CONTENTS":"' + text.replace(/\s/g,'') + '"}'
-    	console.log(codeReview);
-    	
-    	// JSON으로 파싱하기
-   	    var codeReviewJSON = JSON.stringify(codeReview);
-    	console.log(codeReviewJSON);
+
+    	var escapeHTML = function escapeHTML(text) {
+    		var map = {
+    			'&': '&amp;',
+    			'<': '&lt;',
+    			'>': '&gt;',
+    			'"': '&quot;',
+    			"'": '&#039;'
+    		};
+    		return text.replace(/[&<>"']/g, function (m) {
+    			return map[m];
+    		});
+    	};
+        var contents = escapeHTML(text.replace(/\s/g,''));
+        console.log(contents);
+    	let formData = new FormData();
+        formData.append('CR_TITLE', title.replace(/\s/g,''));
+        formData.append('CR_CONTENTS', contents);
+
  		/* CR_CONTENTS : text */
-   	 	httpRequest.send(codeReview);
+   	 	httpRequest.send(formData);
 	}
+
+	
 </script>
 <!-- TOAST Editor End-->
 

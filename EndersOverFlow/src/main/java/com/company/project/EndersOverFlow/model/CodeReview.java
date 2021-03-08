@@ -20,6 +20,8 @@ public class CodeReview {
 	private LocalDate CR_UPDATEDAY;
 	private String CR_ISVIEW;
 	private Long CR_STAR_COUNT;
+	private String CR_COMMENTYN;
+	private String CR_COMMENTYN;
 
 	public CodeReview() {
 	}

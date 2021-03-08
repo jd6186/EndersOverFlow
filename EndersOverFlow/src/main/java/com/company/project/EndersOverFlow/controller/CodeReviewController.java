@@ -1,6 +1,7 @@
 package com.company.project.EndersOverFlow.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +62,25 @@ public class CodeReviewController {
 
 		Long requestCR_NO = Long.parseLong(CR_NO);
 		CodeReview codeReview = codeReviewService.codeReviewFindById(requestCR_NO);
-		System.out.println(codeReview);
-		model.addAttribute("codeReviewDetail", codeReview);
+		System.out.println(codeReview.getCR_CONTENTS());
+		
+		HashMap<String, String> specialCharacters = new HashMap<String, String>();
+		specialCharacters.put("&amp;", "&");
+		specialCharacters.put("&lt;", "<");
+		specialCharacters.put("&gt;", ">");
+		specialCharacters.put("&quot;", "\"");
+		specialCharacters.put("&#039;", "'");
 
+		for( String key : specialCharacters.keySet() ){
+			if(codeReview.getCR_CONTENTS().contains(key)) {
+				codeReview.setCR_CONTENTS(codeReview.getCR_CONTENTS().replaceAll(key, specialCharacters.get(key)));
+			}
+        }
+
+		String[] resultList = codeReview.getCR_CONTENTS().split("<br>");
+		
+		model.addAttribute("codeReviewDetail", codeReview);
+		model.addAttribute("codeTextList", resultList);
 		logger.info("codeReviewDetail 조회 종료");
 		return "code_review/CodeDetail";
 	}
@@ -89,23 +106,16 @@ public class CodeReviewController {
 	
 	// 코드글 등록
 	@PostMapping(path = "/doWrite", produces = "application/json; charset=utf8")
-	public ResponseEntity doWritePage(@RequestBody Map<String, Object> param, HttpServletRequest request){
+	public ResponseEntity doWritePage(HttpServletRequest request){
 		logger.info("doWritePage 진입");
-		
 
 		// Session사용해서 유저정보 확인하기
 		HttpSession session = request.getSession(true);
 		String userUUID = (String) session.getAttribute("userEmail");
 		Member meber = memberService.userCheck(userUUID);
 		
-		Gson gson = new Gson();
-
-		 // jsonPaserPser 클래스 객체를 만들고 해당 객체에 
-		JsonParser jparser = new JsonParser();
-
-		// param의 id 오브젝트 -> 문자열 파싱 -> jsonElement 파싱
-		String CR_TITLE = param.get("CR_TITLE").toString();
-	    String CR_CONTENTS = param.get("CR_CONTENTS").toString(); 
+		String CR_TITLE = request.getParameter("CR_TITLE");
+		String CR_CONTENTS = request.getParameter("CR_CONTENTS");
 	    System.out.println("서버데이터는");
 	    System.out.println(CR_TITLE + " : " + CR_CONTENTS);
 		
