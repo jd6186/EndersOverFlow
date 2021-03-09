@@ -28,15 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.company.project.EndersOverFlow.model.CodeReview;
 import com.company.project.EndersOverFlow.model.Member;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @Controller
 @RequestMapping("codeReview")
 public class CodeReviewController {
 	
-	// 기본형
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	com.company.project.EndersOverFlow.service.CodeReviewService codeReviewService;
@@ -57,14 +53,31 @@ public class CodeReviewController {
 
 	// 코드 상세글 페이지로 이동
 	@GetMapping("/detail")
-	public String goCodeDetailPage(Model model, @RequestParam(value="CR_NO", required=false, defaultValue="0") String CR_NO) {
+	public String goCodeDetailPage(Model model, HttpServletRequest request, @RequestParam(value="CR_NO", required=false, defaultValue="0") String CR_NO) {
 		logger.info("codeReviewDetail 조회 시작");
 
+		// 글 전체 리스트 중 유저가 누른 해당 글 조회하기
 		Long requestCR_NO = Long.parseLong(CR_NO);
 		CodeReview codeReview = codeReviewService.codeReviewFindById(requestCR_NO);
 		System.out.println(codeReview.getCR_CONTENTS());
 		model.addAttribute("codeReviewDetail", codeReview);
+		System.out.println("#################################################################################");
+		System.out.println(codeReview);
 		
+		// 수정이 가능한 글인지 아닌지 판별하기
+		if(codeReview.getCR_QUE_COMMENTYN().equals("N")) {
+			// Session사용해서 유저정보 확인하기
+			HttpSession session = request.getSession(true);
+			String userUUID = (String) session.getAttribute("userEmail");
+			Member member = memberService.userCheck(userUUID);
+			// 글 작성자와 현재 유저가 같은 유저인지 비교하기
+			boolean result = (member.getMBR_NO() == codeReview.getCR_CREATER().getMBR_NO()) ? true : false;
+			model.addAttribute("isEdit", result);
+		} else {
+			model.addAttribute("isEdit", false);
+		}
+		
+		// 줄바꿈 표현을 위한 리스트 제작
 		String[] resultList = codeReview.getCR_CONTENTS().split("&nbsp;");
 		model.addAttribute("codeTextList", resultList);
 		
@@ -84,10 +97,7 @@ public class CodeReviewController {
 			logger.info("수정할 codeText가 없습니다. codeWrite 페이지로 이동");
 			CodeReview dempCodeText = new CodeReview();
 			model.addAttribute("EditText", dempCodeText);
-			
 
-			String[] resultList = dempCodeText.getCR_CONTENTS().split("&nbsp;");
-			model.addAttribute("codeTextList", resultList);
 	        return new ModelAndView("code_review/CodeWrite");
 		}
 		
@@ -96,6 +106,11 @@ public class CodeReviewController {
 		CodeReview codeText = codeReviewService.codeReviewFindById(CODE_NO_L);
 		System.out.println(codeText);
 		model.addAttribute("EditText", codeText);
+		
+
+		String[] resultList = codeText.getCR_CONTENTS().split("&nbsp;");
+		model.addAttribute("codeTextList", resultList);
+		
 		logger.info("수정할 codeText가 있습니다. codeUpdate 페이지로 이동");
         return new ModelAndView("code_review/CodeWrite");
 	}
@@ -109,11 +124,19 @@ public class CodeReviewController {
 		HttpSession session = request.getSession(true);
 		String userUUID = (String) session.getAttribute("userEmail");
 		Member meber = memberService.userCheck(userUUID);
+	    System.out.println("유저데이터는");
+	    System.out.println(meber);
 		
-		String CR_TITLE = request.getParameter("CR_TITLE");
-		String CR_CONTENTS = request.getParameter("CR_CONTENTS");
-	    System.out.println("서버데이터는");
-	    System.out.println(CR_TITLE + " : " + CR_CONTENTS);
+		String CR_TITLE = request.getParameter("CR_TITLE")==null?"None":request.getParameter("CR_TITLE");
+		String CR_CONTENTS = request.getParameter("CR_CONTENTS")==null?"None":request.getParameter("CR_CONTENTS");
+		String CR_TYPE = request.getParameter("CR_TYPE")==null?"None":request.getParameter("CR_TYPE");
+
+		if (CR_TITLE.equals("None") || CR_CONTENTS.equals("None") || CR_TYPE.equals("None")) {
+			logger.info("doWritePage 종료");
+			return new ResponseEntity("req_value_null", HttpStatus.OK);
+		}
+		System.out.println("서버데이터는");
+	    System.out.println(CR_TITLE + " : " + CR_CONTENTS + " : " + CR_TYPE);
 	    
 		
 		CodeReview codeReview = new CodeReview();
@@ -126,15 +149,14 @@ public class CodeReviewController {
 		codeReview.setCR_STAR_COUNT(Long.parseLong("0"));
 		codeReview.setCR_CREATER(meber);
 		codeReview.setCR_ISVIEW("Y");
-		codeReview.setCR_TYPE("review");
+		codeReview.setCR_TYPE(CR_TYPE);
 		codeReview.setCR_COMMENTYN("N");
 		codeReview.setCR_QUE_COMMENTYN("N");
 		if (codeReviewService.save(codeReview) == null) {
 			logger.info("doWritePage 종료");
-			return new ResponseEntity("null", HttpStatus.OK);
+			return new ResponseEntity("save_null", HttpStatus.OK);
 		}
 		logger.info("doWritePage 종료");
 		return new ResponseEntity("true", HttpStatus.OK);
 	}
-	
 }

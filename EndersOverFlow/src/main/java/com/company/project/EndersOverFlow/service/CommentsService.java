@@ -15,27 +15,27 @@ public class CommentsService {
 	@Autowired
 	private CommentsRepository commentsRepository;
 
-	public List<Comments> codeReviewFindAll() {
-		List<Comments> codeReview = new ArrayList<>();
-		commentsRepository.findAll().forEach(e -> codeReview.add(e));
-		return codeReview;
+	public List<Comments> commentsFindAll() {
+		List<Comments> comments = new ArrayList<>();
+		commentsRepository.findAll().forEach(e -> comments.add(e));
+		return comments;
 	}
 
-	public Optional<Comments> codeReviewFindById(Long CR_NO) {
-		Optional<Comments> codeReview = commentsRepository.findById(CR_NO);
-		return codeReview;
+	public Optional<Comments> commentsFindById(Long CM_NO) {
+		Optional<Comments> comments = commentsRepository.findById(CM_NO);
+		return comments;
 	}
 
-	public void codeReviewDeleteById(Long CR_NO) {
+	public void commentsDeleteById(Long CR_NO) {
 		commentsRepository.deleteById(CR_NO);
 	}
 
-	public Comments save(Comments codeReview) {
-		commentsRepository.save(codeReview);
-		return codeReview;
+	public Comments save(Comments comments) {
+		commentsRepository.save(comments);
+		return comments;
 	}
 
-	public void codeReviewUpdateById(Long CR_NO, Comments comments) {
+	public void commentsUpdateById(Long CR_NO, Comments comments) {
 		Optional<Comments> commentsOptional = commentsRepository.findById(CR_NO);
 		if (commentsOptional.isPresent()) {
 			commentsOptional.get().setCM_NO(comments.getCM_NO());
@@ -43,8 +43,8 @@ public class CommentsService {
 			commentsOptional.get().setCM_CREATER(comments.getCM_CREATER());
 			commentsOptional.get().setCM_CONTENTS(comments.getCM_CONTENTS());
 			commentsOptional.get().setCM_CREATEDAY(comments.getCM_CREATEDAY());
-			commentsOptional.get().setCM_ISVIEW(comments.getCM_UPDATEDAY());
-			commentsOptional.get().setCM_UPDATEDAY(comments.getCM_ISVIEW());
+			commentsOptional.get().setCM_ISVIEW(comments.getCM_ISVIEW());
+			commentsOptional.get().setCM_UPDATEDAY(comments.getCM_UPDATEDAY());
 			commentsOptional.get().setCM_STAR_COUNT(comments.getCM_STAR_COUNT());
 			commentsRepository.save(comments);
 		}

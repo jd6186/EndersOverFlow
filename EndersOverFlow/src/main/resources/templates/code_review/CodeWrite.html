@@ -98,14 +98,19 @@ body > * ::-webkit-scrollbar {
 			console.log(text);
 		}
 		var title = document.getElementById('title').value;
+		var type = document.getElementById('written').value;
 		
 		let httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = function () {
         	console.log(this);
     		if (this.readyState == 4) {
-    			if (this.responseText == "null") {
+    			if (this.responseText == "save_null") {
            	    	alert("글을 등록하는 과정 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
+           	    	document.getElementById("signupEmailField").value = "";
+           	    }
+    			if (this.responseText == "req_value_null") {
+           	    	alert("제목과 글을 모두 입력해주세요");
            	    	document.getElementById("signupEmailField").value = "";
            	    }
            	    if (this.responseText == "true") {
@@ -123,6 +128,7 @@ body > * ::-webkit-scrollbar {
     	let formData = new FormData();
         formData.append('CR_TITLE', title.replace(/\s/g,''));
         formData.append('CR_CONTENTS', text.replace(/\s/g,''));
+        formData.append('CR_TYPE', type.replace(/\s/g,''));
 
  		/* CR_CONTENTS : text */
    	 	httpRequest.send(formData);
@@ -149,6 +155,10 @@ body > * ::-webkit-scrollbar {
 			<div class="content">
 				<div style="background-color: white;">
 					<span class="codeWrite">Code Write</span>
+					<select id="written">
+						<option>review</option>
+						<option>info</option>
+					</select>
 				</div>
 				<div style="margin-top: 15px;">
 					<span>Title : </span>
