@@ -20,8 +20,9 @@ public class CodeReview {
 	private LocalDate CR_UPDATEDAY;
 	private String CR_ISVIEW;
 	private Long CR_STAR_COUNT;
+	private String CR_TYPE; 			// 글 종류(코드 질문인지 아니면 소개글인지)
 	private String CR_COMMENTYN;
-	private String CR_COMMENTYN;
+	private String CR_QUE_COMMENTYN; 	// 질문글에 댓글이 달리면 이제 글 수정 불가능하게 만들기 위해 필요
 
 	public CodeReview() {
 	}
@@ -43,6 +44,30 @@ public class CodeReview {
 		CR_UPDATEDAY = cR_UPDATEDAY;
 		CR_ISVIEW = cR_ISVIEW;
 		CR_STAR_COUNT = cR_STAR_COUNT;
+	}
+
+	public String getCR_TYPE() {
+		return CR_TYPE;
+	}
+
+	public void setCR_TYPE(String cR_TYPE) {
+		CR_TYPE = cR_TYPE;
+	}
+
+	public String getCR_COMMENTYN() {
+		return CR_COMMENTYN;
+	}
+
+	public void setCR_COMMENTYN(String cR_COMMENTYN) {
+		CR_COMMENTYN = cR_COMMENTYN;
+	}
+
+	public String getCR_QUE_COMMENTYN() {
+		return CR_QUE_COMMENTYN;
+	}
+
+	public void setCR_QUE_COMMENTYN(String cR_QUE_COMMENTYN) {
+		CR_QUE_COMMENTYN = cR_QUE_COMMENTYN;
 	}
 
 	public Long getCR_NO() {
@@ -115,5 +140,6 @@ public class CodeReview {
 				+ CR_CONTENTS + ", CR_CREATEDAY=" + CR_CREATEDAY + ", CR_UPDATEDAY=" + CR_UPDATEDAY + ", CR_ISVIEW="
 				+ CR_ISVIEW + ", CR_STAR_COUNT=" + CR_STAR_COUNT + "]";
 	}
+
 
 }

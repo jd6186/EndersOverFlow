@@ -15,14 +15,17 @@
 					<header class="detail_context">
 						<span th:text="${codeReviewDetail.CR_TITLE}" style="margin: auto 0px;"></span> 
 						<!-- 
-						TODO Star관련해서 이 글이 정보제공성 글일 경우에만 노출
-						<img alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})" style="width: 20px;"> -->
+						TODO 
+						CR_TYPE을 확인해 이 글이 정보제공성 글일 경우에만 노출
+						<img alt="스타" th:src="@{/img/빈별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;"> 
+						<img alt="스타" th:src="@{/img/꽉찬별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;"> 
+						-->
 					</header>
 					<header class="detail_context" style="margin-top: 20px">
-						<span th:text="Row_숫자"></span> <span th:text=" lines "></span>
-						<img alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit()" style="width: 20px; float: right;">
+						<span th:text="Row_숫자"></span> <span th:text="${codeTextListLength}"></span><span th:text="Lines"></span>
+						<img th:if="${codeReviewDetail.CR_QUE_COMMENTYN} == 'N'" alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit([[${codeReviewDetail.CR_NO}]])" style="width: 20px; float: right;">
 					</header>
-					<div class="textAreaEdit" >
+					<div class="textAreaEdit">
 						<article class="textLines" th:each="item, indexVal : ${codeTextList}">
 							<!-- 
 							TODO
@@ -37,16 +40,17 @@
 								지금은 임시 샘플 넣어둔 것임-->
 								<div class="codeReviewTextLineComments">
 									<div class="codeReviewTextLineComments commentArea">
-										<span class="codeReviewTextLineComments span" th:text="정동욱"></span>
-										<img class="codeReviewTextLineComments img" alt="스타"
-											th:src="@{/img/빈별.png}" style="width: 20px;">
+										<span class="codeReviewTextLineComments span" th:text="댓글_작성자_여기에_입력"></span>
+											<!-- 
+											TODO
+											CR_TYPE을 확인해 코드리뷰 요청 글일 때만 나타나야함
+											Star관리할 때 각 댓글들에 별 줄수 있게 만들기(index에 줘야합니당~ 저장할때도 해당 글의 몇번째 인덱스의 뭐)
+											<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;"> 
+											<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;"> -->
 										<div>
-											<p th:text="댓글댓글"></p>
+											<p th:text="댓글_내용_여기에_입력"></p>
 										</div>
 									</div>
-									<!-- 
-									TODO
-									이 위치에 div태그가 들어올 예정(댓글) -->
 								</div>
 								<!-- 
 								TODO
@@ -63,21 +67,20 @@
 					</div>
 					<!-- 
 					TODO
-					댓글 작성기능이 만들어지면 아래와 치환하기 -->
+					댓글 작성기능이 만들어지면 아래 작업 -->
 					<footer class="reviewDetailFooter" style="margin-top: 20px">
 						<div class="codeReviewComments">
+							<!-- 댓글이 여러개면 commentArea를 th:each로 돌려주기 -->
 							<div class="commentArea">
-								<span th:text="정동욱"></span> <img alt="스타"
-									th:src="@{/img/빈별.png}" style="width: 20px;">
+								<span th:text="댓글_작성자_여기에_입력"></span>
+									<!-- 
+									TODO
+									CR_TYPE을 확인해 코드리뷰 요청 글일 때만 나타나야함
+									Star관리할 때 각 댓글들에 별 줄수 있게 만들기(index에 줘야합니당~ 저장할때도 해당 글의 몇번째 인덱스의 뭐)
+									<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange()" style="width: 20px;"> 
+									<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange()" style="width: 20px;"> -->
 								<div>
-									<p th:text="댓글댓글"></p>
-								</div>
-							</div>
-							<div class="commentArea">
-								<span th:text="이재민"></span> <img alt="스타"
-									th:src="@{/img/빈별.png}" style="width: 20px;">
-								<div>
-									<p th:text="글댓글댓"></p>
+									<p th:text="댓글_내용_여기에_입력"></p>
 								</div>
 							</div>
 						</div>
@@ -87,61 +90,12 @@
 								<textarea class="textareaTag" rows="" cols=""
 									style="width: 90%;"
 									placeholder="Add an optional extended description…"></textarea>
+								<!-- TODO
+								button누르면 댓글이 저장되는 메서드 만들고 연동하기 -->
 								<button style="width: 9%; height: 30px">등록</button>
 							</div>
 						</div>
 					</footer>
-					<!--
-					// TODO
-					// 데이터 넘어오면 아래 내용으로 대체
-					<header class="detail_context">
-						// TODO
-						// 이게 추천코드글이라면 star가 나와야하지만 아니라면 star가 나와서는 안된다.
-						// 반대로 댓글에 있는 star기능은 반드시 코드리뷰글일 때만 나오게 해야한다.
-						// 글을 저장할 때 코드리뷰글인지 아니면 추천코드글인지를 구분해주는 컬럼이 하나 있어야겠다.
-						<span th:text="${title}"></span>
-						<img th:if="${isStar} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})"  style="width: 20px;">
-						<img th:if="${isStar} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})"  style="width: 20px;">
-					</header>
-					// TODO 
-					// 아래 textLineList가 출력될 때 댓글이 있는 textLine과 그렇지 않은 라인을 구분해서 출력해줘야한다.
-					<div class="textAreaEdit" style="margin-top: 20px">
-						<article class="textLines" th:each="item : ${textLineList}">
-							<p class="commentYN commentY" th:if="${item.commentYN} == 'Y'" th:onclick="commentView(event, ${item.no})" th:text="${item.text}"></p>
-							<p class="commentYN commentN" th:if="${item.commentYN} == 'N'" th:text="${item.text}"></p>
-							<div class="commentManage" th:id="${item.no}" display: none; padding-left: 15px;">
-								// TODO
-								// 해당 textLine에 해당하는 Comment가 있다면 붙여주기
-								<div class="codeReviewTextLineComments">
-									// TODO
-									// 이 위치에 div태그가 들어올 예정(댓글)
-								</div>
-								<div class="commentManageFixedAe">
-									<p class="codeReviewTextLinePTag">Comments</p>
-									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag" rows="" cols=""></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px">등록</button>
-									</div>
-								</div>
-							</div>
-						</article> 
-					</div>
-					<footer class="reviewDetailFooter" style="margin-top: 20px">
-						<div class="codeReviewComments">
-							// TODO
-							// 이 글에 대한 Comment가 있다면 붙여주기
-							// 이 위치에 div태그가 들어올 예정
-							//댓글
-						</div>
-						<div class="commentMainManage">
-							<p class="codeReviewTextLinePTag">Comments</p>
-							<div style="margin-top: 10px">
-								<textarea class="textareaTag" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
-								<button style="width: 9%; height: 30px">등록</button>
-							</div>
-						</div>
-					</footer>
-			  	-->
 				</div>
 			</div>
 		</section>
@@ -159,6 +113,7 @@
 			// star 글 목록에서 해당 글의 star수를 +1 시키기 
 		}
 	}
+	
 	function commentView(event, id) {
 		console.log(id);
 		if (document.getElementById(id).style.display == "none") {
@@ -173,6 +128,11 @@
 			document.getElementById(id).style.display = "none";
 		}
 	}
+	
+	function textEdit(CR_NO){
+		location.href = "/codeReview/write?CR_NO=" + CR_NO;
+	}
+	
 	document.getElementsByTagName('body')[0].addEventListener(
 		'click',
 		function(event) {
@@ -199,38 +159,4 @@
 
 		});
 </script>
-<th:block layout:fragment="script">
-	<script type="text/javascript">
-		// TODO
-		// 현재 출력되는 형태는 DB에 저장된 그대로가 출력되고 있는데 DB에 저장할 때 
-		// 아예 `안쪽의 데이터를 제외한 나머지 영역에 대한 내용은 그냥 HTML테그를 제거하고 저장하고 
-		// `로 감싸진 부분에 있는데이터만 따로 HTML태그를 남겨서 저장하기
-		function escapeHTML(text) {
-			let map = {
-				'&amp;': '&',
-				'&lt;': '<',
-				'&gt;': '>',
-				'&quot;': '"',
-				"&#039;": "'"
-			};
-			for (item in map){
-				text = text.replaceAll(item, map[item]);
-			}
-			return text;
-		}
-		function charSelect(){
-			let result = "[[ ${codeReviewDetail} ]]"
-			let CR_CONTENTS = result.split("CR_CONTENTS=")[1].split(",")[0];
-	        let contents = escapeHTML(CR_CONTENTS);
-	        if(contents.indexOf("<br>") > 0){
-	        	let returnData = contents.split("<br>")
-	        	return returnData
-	        }
-        	return contents
-		}
-		window.onload = function(){
-			let result = charSelect();
-		}
-    </script>
-</th:block>
 </html>

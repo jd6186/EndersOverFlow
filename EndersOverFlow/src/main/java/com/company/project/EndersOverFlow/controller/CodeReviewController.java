@@ -63,43 +63,39 @@ public class CodeReviewController {
 		Long requestCR_NO = Long.parseLong(CR_NO);
 		CodeReview codeReview = codeReviewService.codeReviewFindById(requestCR_NO);
 		System.out.println(codeReview.getCR_CONTENTS());
-		
-		HashMap<String, String> specialCharacters = new HashMap<String, String>();
-		specialCharacters.put("&amp;", "&");
-		specialCharacters.put("&lt;", "<");
-		specialCharacters.put("&gt;", ">");
-		specialCharacters.put("&quot;", "\"");
-		specialCharacters.put("&#039;", "'");
-
-		for( String key : specialCharacters.keySet() ){
-			if(codeReview.getCR_CONTENTS().contains(key)) {
-				codeReview.setCR_CONTENTS(codeReview.getCR_CONTENTS().replaceAll(key, specialCharacters.get(key)));
-			}
-        }
-
-		String[] resultList = codeReview.getCR_CONTENTS().split("<br>");
-		
 		model.addAttribute("codeReviewDetail", codeReview);
+		
+		String[] resultList = codeReview.getCR_CONTENTS().split("&nbsp;");
 		model.addAttribute("codeTextList", resultList);
+		
+		model.addAttribute("codeTextListLength", resultList.length);
 		logger.info("codeReviewDetail 조회 종료");
 		return "code_review/CodeDetail";
 	}
 
 	// 코드글 작성 페이지로 이동
 	@RequestMapping("/write")
-	public ModelAndView goCodeWritePage(@ModelAttribute CodeReview codeReview,
-            HttpServletRequest request, @RequestParam(value="CODE_NO", required=false, defaultValue="value_is_null") String CODE_NO) {
+	public ModelAndView goCodeWritePage(Model model, @ModelAttribute CodeReview codeReview,
+            HttpServletRequest request, @RequestParam(value="CR_NO", required=false, defaultValue="value_is_null") String CR_NO) {
 		logger.info("codeWrite 페이지로 이동을 위해 데이터 조회 시작");
 		// 코드글 번호 획득(없을 경우는 바로 글 작성페이지로 이동)
-		if (CODE_NO.equals("value_is_null")) {
+		
+		if (CR_NO.equals("value_is_null")) {
 			logger.info("수정할 codeText가 없습니다. codeWrite 페이지로 이동");
+			CodeReview dempCodeText = new CodeReview();
+			model.addAttribute("EditText", dempCodeText);
+			
+
+			String[] resultList = dempCodeText.getCR_CONTENTS().split("&nbsp;");
+			model.addAttribute("codeTextList", resultList);
 	        return new ModelAndView("code_review/CodeWrite");
 		}
 		
 		// 코드글 체크
-		Long CODE_NO_L = Long.parseLong(CODE_NO);
+		Long CODE_NO_L = Long.parseLong(CR_NO);
 		CodeReview codeText = codeReviewService.codeReviewFindById(CODE_NO_L);
 		System.out.println(codeText);
+		model.addAttribute("EditText", codeText);
 		logger.info("수정할 codeText가 있습니다. codeUpdate 페이지로 이동");
         return new ModelAndView("code_review/CodeWrite");
 	}
@@ -118,6 +114,7 @@ public class CodeReviewController {
 		String CR_CONTENTS = request.getParameter("CR_CONTENTS");
 	    System.out.println("서버데이터는");
 	    System.out.println(CR_TITLE + " : " + CR_CONTENTS);
+	    
 		
 		CodeReview codeReview = new CodeReview();
 		codeReview.setCR_TITLE(CR_TITLE);
@@ -129,13 +126,15 @@ public class CodeReviewController {
 		codeReview.setCR_STAR_COUNT(Long.parseLong("0"));
 		codeReview.setCR_CREATER(meber);
 		codeReview.setCR_ISVIEW("Y");
+		codeReview.setCR_TYPE("review");
+		codeReview.setCR_COMMENTYN("N");
+		codeReview.setCR_QUE_COMMENTYN("N");
 		if (codeReviewService.save(codeReview) == null) {
 			logger.info("doWritePage 종료");
 			return new ResponseEntity("null", HttpStatus.OK);
 		}
 		logger.info("doWritePage 종료");
 		return new ResponseEntity("true", HttpStatus.OK);
-		
 	}
 	
 }

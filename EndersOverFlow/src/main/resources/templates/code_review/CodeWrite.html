@@ -75,6 +75,8 @@ body > * ::-webkit-scrollbar {
 <!-- Scripts -->
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 
+
+<th:block layout:fragment="script">
 <script type="text/javascript">
 	
 	var editor = null;
@@ -86,9 +88,15 @@ body > * ::-webkit-scrollbar {
 			previewStyle: 'vertical',
 			height: '85%'
 		});
+		textWrite();
 	});
 	function codeSave(){
-		var text = editor.getHtml();
+		var text = editor.getMarkdown();
+		console.log(text);
+		if (text.indexOf("\n") != -1){
+			text = text.replaceAll("\n", "&nbsp;");
+			console.log(text);
+		}
 		var title = document.getElementById('title').value;
 		
 		let httpRequest = new XMLHttpRequest();
@@ -111,35 +119,27 @@ body > * ::-webkit-scrollbar {
    	    }
     	httpRequest.open("POST", "/codeReview/doWrite", true);
 
-    	var escapeHTML = function escapeHTML(text) {
-    		var map = {
-    			'&': '&amp;',
-    			'<': '&lt;',
-    			'>': '&gt;',
-    			'"': '&quot;',
-    			"'": '&#039;'
-    		};
-    		return text.replace(/[&<>"']/g, function (m) {
-    			return map[m];
-    		});
-    	};
-        var contents = escapeHTML(text.replace(/\s/g,''));
-        console.log(contents);
+        
     	let formData = new FormData();
         formData.append('CR_TITLE', title.replace(/\s/g,''));
-        formData.append('CR_CONTENTS', contents);
+        formData.append('CR_CONTENTS', text.replace(/\s/g,''));
 
  		/* CR_CONTENTS : text */
    	 	httpRequest.send(formData);
 	}
 
-	
+	function textInsert(){
+		let respText = "[[ ${EditText.CR_CONTENTS} ]]";
+		respText = respText.replaceAll("&amp;nbsp;", "\n");
+    	return respText
+	}
+	function textWrite(){
+		var text = textInsert();
+		editor.setMarkdown(text);
+	}
 </script>
+</th:block>
 <!-- TOAST Editor End-->
-
-<!-- CK Editor Start -->
-<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-<!-- CK Editor End -->
 
 <body>
 	<section id="wrap">
@@ -152,11 +152,12 @@ body > * ::-webkit-scrollbar {
 				</div>
 				<div style="margin-top: 15px;">
 					<span>Title : </span>
-					<input type="text" id="title" style="border-width: 2px; border-style: solid; border-radius: 5px; width: 300px;">
+					<input type="text" th:value="${EditText.CR_TITLE}" id="title" style="border-width: 2px; border-style: solid; border-radius: 5px; width: 300px;">
 					<button class="codeCancle">취소</button>
 					<button class="codeSave" onclick="codeSave();">저장</button>
 				</div>
-                <div id="editorDiv"></div>
+                <div id="editorDiv">
+                </div>
 			</div>
 		</section>
 	</section>
