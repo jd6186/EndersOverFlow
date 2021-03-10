@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.company.project.EndersOverFlow.model.Member;
 import com.company.project.EndersOverFlow.repository.MemberRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,61 +25,68 @@ import javax.persistence.PersistenceContext;
 @Service
 @SessionAttributes("userEmail")
 public class MemberService{
-	@PersistenceContext
 	// @PersistenceContext 즉, 영속성 컨텍스트는 엔티티를 영구 저장하는 환경으로써 EntityManager로 엔티티를 저장하거나 조회하면 
 	// EntityManager는 영속성 컨텍스트에 엔티티를 보관하고 관리한다.
+	@PersistenceContext
 	private EntityManager entityManager;
-
-	
 	@Autowired
 	private MemberRepository memberRepository;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public List<Member> findAll() {
-		System.out.println("findAll Service 진입");
+		logger.info("findAll Service 진입");
 		List<Member> members = new ArrayList<>();
 		memberRepository.findAll().forEach(e -> members.add(e));
+		logger.info("findAll Service 종료");
 		return members;
 	}
 
 	public Member findMember (String MBR_EMAIL) { 
-		System.out.println("findMember Service 진입");
+		logger.info("findMember Service 진입");
 		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_EMAIL='" + MBR_EMAIL + "' AND m.MBR_AUTH='Y'"; 
 		try {
 			Member member = entityManager.createQuery(rowQuery, Member.class)
 					.getSingleResult();
+			logger.info("findMember Service 종료");
 			return member;
 		} catch (NoResultException e) {
-			System.out.println("데이터가 없습니다." + e);
+			logger.warn("데이터가 없습니다." + e);
+			logger.info("findMember Service 종료");
 			return null;
 		}
 	}
 	
 	public Member userCheck (String MBR_LOGINUUID) { 
-		System.out.println("memberCheck Service 진입");
+		logger.info("memberCheck Service 진입");
 		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_LOGINUUID='"+MBR_LOGINUUID+"'"; 
 		try {
 			Member member = entityManager.createQuery(rowQuery, Member.class)
 					.getSingleResult();
+			logger.info("userCheck Service 종료");
 			return member;
 		}catch (Exception e) {
-			System.out.println("데이터가 없습니다." + e);
+			logger.warn("데이터가 없습니다." + e);
+			logger.info("userCheck Service 종료");
 			return null;
 		}
 	}
 
 	public void deleteById(Long MBR_NO) {
-		System.out.println("deleteById Service 진입");
+		logger.info("deleteById Service 진입");
 		memberRepository.deleteById(MBR_NO);
+		logger.info("deleteById Service 종료");
 	}
 
 	public Member doSignUp(Member member) {
-		System.out.println("doSignUp Service 진입");
+		logger.info("doSignUp Service 진입");
 		memberRepository.save(member);
+		logger.info("doSignUp Service 종료");
 		return member;
 	}
 
 	public Boolean passwordUpdate(String MBR_EMAIL, String MBR_PASSWORD, String MBR_NEW_PASSWORD, Member member) {
-		System.out.println("passwordUpdate Service 진입");
+		logger.info("passwordUpdate Service 진입");
 		Optional<Member> e = memberRepository.findById(member.getMBR_NO());
 		if (e.get().getMBR_EMAIL().equals(MBR_EMAIL)) {
 			if (e.get().getMBR_PASSWORD().equals(MBR_PASSWORD)) {
@@ -85,19 +94,24 @@ public class MemberService{
 				member.setMBR_PASSWORD(MBR_NEW_PASSWORD);
 				member.setMBR_PASSWORD_UPDATE_DATE(nowDate);
 				memberRepository.save(member);
+				logger.info("passwordUpdate Service 종료");
 				return true;
 			}
 		}
+		logger.warn("passwordUpdate Service 실패");
 		return false;
 	}
 
 	public Boolean loginUuidUpdate(Member member) {
+		logger.info("loginUuidUpdate Service 진입");
 		boolean result = false;
 		try {
 			memberRepository.save(member);
+			logger.info("loginUuidUpdate Service 종료");
 			return true;
 		} catch (Exception e) {
-			System.out.println("업데이트 실패");
+			logger.warn("업데이트 실패." + e);
+			logger.info("loginUuidUpdate Service 종료");
 			return false;
 		}
 	}

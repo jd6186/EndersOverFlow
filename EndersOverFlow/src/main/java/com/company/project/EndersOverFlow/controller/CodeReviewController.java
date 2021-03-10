@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -27,17 +29,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.company.project.EndersOverFlow.model.CodeReview;
+import com.company.project.EndersOverFlow.model.Comments;
 import com.company.project.EndersOverFlow.model.Member;
 
 @Controller
 @RequestMapping("codeReview")
 public class CodeReviewController {
-	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	com.company.project.EndersOverFlow.service.CodeReviewService codeReviewService;
 	@Autowired
 	com.company.project.EndersOverFlow.service.MemberService memberService;
+	@Autowired
+	com.company.project.EndersOverFlow.service.CommentsService commentService;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// 코드 리스트 전체 목록 페이지로 이동
 	@RequestMapping("list")
@@ -59,10 +65,8 @@ public class CodeReviewController {
 		// 글 전체 리스트 중 유저가 누른 해당 글 조회하기
 		Long requestCR_NO = Long.parseLong(CR_NO);
 		CodeReview codeReview = codeReviewService.codeReviewFindById(requestCR_NO);
-		System.out.println(codeReview.getCR_CONTENTS());
 		model.addAttribute("codeReviewDetail", codeReview);
-		System.out.println("#################################################################################");
-		System.out.println(codeReview);
+		System.out.println("##################################### 글 전체 리스트 중 유저가 누른 해당 글 조회하기 ######################################");
 		
 		// 수정이 가능한 글인지 아닌지 판별하기
 		if(codeReview.getCR_QUE_COMMENTYN().equals("N")) {
@@ -76,11 +80,20 @@ public class CodeReviewController {
 		} else {
 			model.addAttribute("isEdit", false);
 		}
+		System.out.println("##################################### 수정이 가능한 글인지 아닌지 판별하기 ######################################");
 		
 		// 줄바꿈 표현을 위한 리스트 제작
 		String[] resultList = codeReview.getCR_CONTENTS().split("&nbsp;");
 		model.addAttribute("codeTextList", resultList);
+		System.out.println("##################################### 줄바꿈 표현을 위한 리스트 제작 ######################################");
 		
+		// 댓글이 있는지 체큭하기
+		long crNO = codeReview.getCR_NO();
+		List<Comments> commentsList = commentService.commentsFindAllByCrNo(crNO);
+		model.addAttribute("commentsList", commentsList);
+		System.out.println("##################################### 댓글이 있는지 체크하기 ######################################");
+		
+		// 글 전체 Row수 구하기
 		model.addAttribute("codeTextListLength", resultList.length);
 		logger.info("codeReviewDetail 조회 종료");
 		return "code_review/CodeDetail";

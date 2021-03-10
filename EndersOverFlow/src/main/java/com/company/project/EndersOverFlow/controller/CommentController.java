@@ -43,30 +43,32 @@ public class CommentController {
 		HttpSession session = request.getSession(true);
 		String userUUID = (String) session.getAttribute("userEmail");
 		Member meber = memberService.userCheck(userUUID);
-	    System.out.println("유저데이터는");
-	    System.out.println(meber);
 		
 		String CM_CONTENTS = request.getParameter("CM_CONTENTS")==null ? "None" : request.getParameter("CM_CONTENTS");
 		if (CM_CONTENTS.equals("None")) {
-			logger.info("doCommentPage 종료");
+			logger.info("doCommentWrite CM_CONTENTS_null로 인해 실패");
 			return new ResponseEntity("CM_CONTENTS_null", HttpStatus.OK);
 		}
 		String reqCM_CR_NO = request.getParameter("CM_CR_NO")==null ? "None" : request.getParameter("CM_CR_NO");
 		long longCM_CR_NO = 0L;
 		CodeReview codeReview = new CodeReview();
 		if (reqCM_CR_NO.equals("None")) {
-			logger.info("doCommentPage 종료");
+			logger.info("doCommentWrite CM_CR_NO_null로 인해 실패");
 			return new ResponseEntity("CM_CR_NO_null", HttpStatus.OK);
 		} else {
 			longCM_CR_NO = Long.parseLong(reqCM_CR_NO);
 			codeReview = codeReviewService.codeReviewFindById(longCM_CR_NO);
 		}
 		
+		// TextLine에 댓을을 작성하는지 아니면 전체 글에 대한 댓글을 작성한 것인지 구분하는 작업
 		String CM_INDEX = request.getParameter("CM_INDEX")==null ? "None" : request.getParameter("CM_INDEX");
 		long index = 999999999999999999L;
 		if (!CM_INDEX.equals("None")) {
 			index = Long.parseLong(CM_INDEX);
+			// Text Line에 댓글이 달리면 더 이상 글 수정이 불가능하게 만들기 위해 댓글이 달렸다는 것을 알림
+			codeReview.setCR_QUE_COMMENTYN("Y");
 		}
+		
 		// 오늘 날짜 조회
 		LocalDate nowDate = LocalDate.now();
 		
@@ -81,10 +83,12 @@ public class CommentController {
 		comments.setCM_STAR_COUNT((long) 0);
 		comments.setCM_INDEX(index);
 		if (commentService.save(comments) == null) {
-			logger.info("doWritePage 종료");
+			logger.warn("doWritePage save_null");
 			return new ResponseEntity("save_null", HttpStatus.OK);
 		}
-		logger.info("doCommentPage 종료");
+		codeReview.setCR_COMMENTYN("Y");
+		codeReviewService.save(codeReview);
+		logger.info("doCommentPage 정상 종료");
 		return new ResponseEntity("true", HttpStatus.OK);
 	}
 	
