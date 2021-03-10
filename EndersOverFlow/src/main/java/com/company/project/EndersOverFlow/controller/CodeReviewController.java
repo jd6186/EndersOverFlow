@@ -68,14 +68,16 @@ public class CodeReviewController {
 		model.addAttribute("codeReviewDetail", codeReview);
 		System.out.println("##################################### 글 전체 리스트 중 유저가 누른 해당 글 조회하기 ######################################");
 		
+
+		// Session사용해서 유저정보 확인하기
+		HttpSession session = request.getSession(true);
+		String userUUID = (String) session.getAttribute("userEmail");
+		Member member = memberService.userCheck(userUUID);
+		// 글 작성자와 현재 유저가 같은 유저인지 비교하기
+		boolean result = (member.getMBR_NO() == codeReview.getCR_CREATER().getMBR_NO()) ? true : false;
+		model.addAttribute("isCommentEdit", result);
 		// 수정이 가능한 글인지 아닌지 판별하기
-		if(codeReview.getCR_QUE_COMMENTYN().equals("N")) {
-			// Session사용해서 유저정보 확인하기
-			HttpSession session = request.getSession(true);
-			String userUUID = (String) session.getAttribute("userEmail");
-			Member member = memberService.userCheck(userUUID);
-			// 글 작성자와 현재 유저가 같은 유저인지 비교하기
-			boolean result = (member.getMBR_NO() == codeReview.getCR_CREATER().getMBR_NO()) ? true : false;
+		if(result && codeReview.getCR_QUE_COMMENTYN().equals("N")) {
 			model.addAttribute("isEdit", result);
 		} else {
 			model.addAttribute("isEdit", false);
@@ -83,7 +85,7 @@ public class CodeReviewController {
 		System.out.println("##################################### 수정이 가능한 글인지 아닌지 판별하기 ######################################");
 		
 		// 줄바꿈 표현을 위한 리스트 제작
-		String[] resultList = codeReview.getCR_CONTENTS().split("&nbsp;");
+		String[] resultList = codeReview.getCR_CONTENTS().split("&nbspN;");
 		model.addAttribute("codeTextList", resultList);
 		System.out.println("##################################### 줄바꿈 표현을 위한 리스트 제작 ######################################");
 		

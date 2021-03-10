@@ -29,27 +29,27 @@ public class CommentsService {
 		logger.info("commentsFindAll Service 진입");
 		List<Comments> comments = new ArrayList<>();
 		commentsRepository.findAll().forEach(e -> comments.add(e));
-		logger.info("commentsFindAll Service 진입");
+		logger.info("commentsFindAll Service 종료");
 		return comments;
 	}
 
 	public Optional<Comments> commentsFindById(Long CM_NO) {
 		logger.info("commentsFindById Service 진입");
 		Optional<Comments> comments = commentsRepository.findById(CM_NO);
-		logger.info("commentsFindById Service 진입");
+		logger.info("commentsFindById Service 종료");
 		return comments;
 	}
 
 	public void commentsDeleteById(Long CM_NO) {
 		logger.info("commentsDeleteById Service 진입");
 		commentsRepository.deleteById(CM_NO);
-		logger.info("commentsDeleteById Service 진입");
+		logger.info("commentsDeleteById Service 종료");
 	}
 
 	public Comments save(Comments comments) {
 		logger.info("Comments save Service 진입");
 		commentsRepository.save(comments);
-		logger.info("Comments save Service 진입");
+		logger.info("Comments save Service 종료");
 		return comments;
 	}
 
@@ -67,20 +67,23 @@ public class CommentsService {
 			commentsOptional.get().setCM_STAR_COUNT(comments.getCM_STAR_COUNT());
 			commentsRepository.save(comments);
 		}
-		logger.info("commentsUpdateById Service 진입");
+		logger.info("commentsUpdateById Service 종료");
 	}
 	
 	public List<Comments> commentsFindAllByCrNo(Long CR_NO) {
 		logger.info("commentsFindByCrNo Service 진입");
-		String rowQuery = "select m from COMMENTS m where m.CM_CR_NO='"+CR_NO+"'"; 
+		String rowQuery = "select m from COMMENTS m where m.CM_CR_NO='"+CR_NO+"' and m.CM_ISVIEW='Y'"; 
 		try {
 			List<Comments> comments = entityManager.createQuery(rowQuery, Comments.class)
 					.getResultList();
-			logger.info("commentsFindByCrNo Service 진입");
+			if(comments.size() == 0){
+				return null;
+			}
+			logger.info("commentsFindByCrNo Service 종료");
 			return comments;
 		}catch (Exception e) {
 			logger.warn("데이터가 없습니다." + e);
-			logger.info("commentsFindByCrNo Service 진입");
+			logger.info("commentsFindByCrNo Service 비정상 종료");
 			return null;
 		}
 	}

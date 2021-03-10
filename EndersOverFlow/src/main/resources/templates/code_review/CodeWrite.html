@@ -92,10 +92,8 @@ body > * ::-webkit-scrollbar {
 	});
 	function codeSave(){
 		var text = editor.getMarkdown();
-		console.log(text);
 		if (text.indexOf("\n") != -1){
-			text = text.replaceAll("\n", "&nbsp;");
-			console.log(text);
+			text = text.replaceAll("\n", "&nbspN;");
 		}
 		var title = document.getElementById('title').value;
 		var type = document.getElementById('written').value;
@@ -127,7 +125,7 @@ body > * ::-webkit-scrollbar {
         
     	let formData = new FormData();
         formData.append('CR_TITLE', title.replace(/\s/g,''));
-        formData.append('CR_CONTENTS', text.replace(/\s/g,''));
+        formData.append('CR_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
         formData.append('CR_TYPE', type.replace(/\s/g,''));
 
  		/* CR_CONTENTS : text */
@@ -136,7 +134,7 @@ body > * ::-webkit-scrollbar {
 
 	function textInsert(){
 		let respText = "[[ ${EditText.CR_CONTENTS} ]]";
-		respText = respText.replaceAll("&amp;nbsp;", "\n");
+		respText = respText.replaceAll("&amp;nbspN;", "\n");
     	return respText
 	}
 	function textWrite(){
