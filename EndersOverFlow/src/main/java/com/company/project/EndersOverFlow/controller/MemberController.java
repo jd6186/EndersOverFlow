@@ -51,12 +51,13 @@ public class MemberController {
 	
 	// 실제 로그인 진행
 	@PostMapping(path = "/dologin")
-	public String doLoginPage(Model model, @Validated String emailField, @Validated String passwordField){
+	public ResponseEntity doLoginPage(Model model, HttpServletRequest request){
 		logger.info("login 페이지 진입");
 		
 		// 이메일 정보로 맴버 확인하기
+		String emailField = (String) request.getAttribute("emailField");
+		String passwordField = (String) request.getAttribute("passwordField");
 		try {
-
 			Member searchMember = memberService.findMember(emailField);
 			// 맴버비밀번호 확인
 			if (searchMember.getMBR_PASSWORD().equals(passwordField) && searchMember.getMBR_AUTH().equals("Y")) {
@@ -65,15 +66,17 @@ public class MemberController {
 				boolean result = memberService.loginUuidUpdate(searchMember);
 				if (result) {
 					model.addAttribute("userEmail", uuid);
-					return "/index";
+					return new ResponseEntity("login", HttpStatus.OK);
 				} else {
-		        	return "redirect:/member/login";
+		        	return new ResponseEntity("false", HttpStatus.OK);
 				}
+			} else if (searchMember.getMBR_PASSWORD().equals(passwordField) && searchMember.getMBR_AUTH().equals("N")) {
+				return new ResponseEntity("authCheck", HttpStatus.OK);
 	        } else {
-	        	return "redirect:/member/login";
+	        	return new ResponseEntity("false", HttpStatus.OK);
 	        }
 		} catch (Exception e) {
-        	return "redirect:/member/login";
+        	return new ResponseEntity("false", HttpStatus.OK);
 		}
 		
 	}

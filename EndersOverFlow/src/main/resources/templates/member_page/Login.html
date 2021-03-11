@@ -20,10 +20,10 @@
                     <input type="text" name="emailField" id="emailField" class="input-field" placeholder="Enter Email" required>
                     <input type="password" name="passwordField" id="passwordField" class="input-field" placeholder="Enter Password" required>
                     <input type="checkbox" class="checkbox"><span>Remember Password</span>
-                    <button type="submit" class="submitButton" style="margin-top: 20px;">Login</button>
+                    <button type="submit" class="submitButton" style="margin-top: 20px;"  onclick="doLogin(); return false;">Login</button>
                 </form>
-                <form id="register" th:action="@{/member/signUpMember}" th:object="${member}" name="signUpData" method="post" class="input-group">
-                    <input type="email"  th:field="*{MBR_EMAIL}" id="signupEmailField" class="input-field" placeholder="엔더스 이메일 입력(example@enders.co.kr)" required>
+                <form id="register" th:action="@{/email/doEmailAuthCheck}" th:object="${member}" name="signUpData" method="post" class="input-group">
+                    <input type="email" name="userEmail" th:field="*{MBR_EMAIL}" id="signupEmailField" class="input-field" placeholder="엔더스 이메일 입력(example@enders.co.kr)" required>
                     <button style="margin-top: 7px; margin-bottom: 10px;" onclick="doEmailCheck(); return false;">중복검사</button>
                     <input type="text" th:field="*{MBR_NICNAME}" class="input-field" placeholder="닉네임 입력" required>
                     <input type="password" th:field="*{MBR_PASSWORD}" class="input-field" placeholder="영문/숫자/특수문자(선택) 조합 8~20자리 비밀번호 설정" required>
@@ -63,6 +63,57 @@
                    	    if (this.responseText == "false") {
                    	    	alert("중복되는 아이디가 있습니다.");
                    	    	document.getElementById("emailField").value = "";
+                   	    	document.getElementById("passwordField").value = "";
+                   	    }
+            		}
+           	    }
+            	httpRequest.open("GET", "/member/emailCheck?MBR_EMAIL=" + document.getElementById("signupEmailField").value);
+           	 	httpRequest.send();
+           	}	
+            function doLogin(){
+            	let httpRequest = new XMLHttpRequest();
+
+                httpRequest.onreadystatechange = function () {
+            		if (this.readyState == 4) {
+            			if (this.responseText == "login") {
+               	    		location.href = "/";
+                   	    }
+                   	    if (this.responseText == "authCheck") {
+                   	    	var authCode = prompt("인증이 필요합니다. 발송된 인증코드를 입력해주세요.");
+                   	    	var authResult = authCheck(authCode);
+                   	    	if (authResult){
+                   	    		location.href = "/";
+                   	    	}
+                   	    }
+                   	    if (this.responseText == "false") {
+                   	    	alert("로그인 정보가 잘못되었습니다..");
+               	    		location.href = "/member/login";
+                   	    }
+            		}
+           	    }
+            	httpRequest.open("POST", "/member/dologin=" + document.getElementById("signupEmailField").value);
+            	let formData = new FormData();
+		        formData.append('emailField', document.getElementById("emailField").value.replace(/\s/g,''));
+		        formData.append('passwordField', document.getElementById("passwordField").replace(/\t/g,'  ').replace(/\s/g,' '));
+           	 	httpRequest.send();
+           	}	
+            
+            function authCheck(authCode){
+            	let httpRequest = new XMLHttpRequest();
+
+                httpRequest.onreadystatechange = function () {
+            		if (this.readyState == 4) {
+            			if (this.responseText == "login") {
+                   	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
+                   	    	document.getElementById("signupEmailField").value = "";
+                   	    }
+                   	    if (this.responseText == "authCheck") {
+                   	    	var authCode = prompt("인증이 필요합니다. 발송된 인증코드를 입력해주세요.");
+                   	    	
+                   	    }
+                   	    if (this.responseText == "false") {
+                   	    	alert("중복되는 아이디가 있습니다.");
+                   	    	document.getElementById("emailField").value = "";
                    	    	document.getElementById("emailField").value = "";
                    	    }
             		}
@@ -70,7 +121,6 @@
             	httpRequest.open("GET", "/member/emailCheck?MBR_EMAIL=" + document.getElementById("signupEmailField").value);
            	 	httpRequest.send();
            	}	
-            
         </script>
     </body>
 </html> 
