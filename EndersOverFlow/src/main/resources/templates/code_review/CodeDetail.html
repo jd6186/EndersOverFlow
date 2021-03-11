@@ -1,262 +1,272 @@
 <!DOCTYPE html>
 <html xmlns:th="http:www.thymeleaf.org">
-<head>
-<div th:replace="/fragments/meta.html :: fragment-meta"></div>
-</head>
-
-<body>
-	<section id="wrap">
-		<div th:replace="/fragments/header.html :: fragment-header"></div>
-		<section id="content_wrap">
-			<div th:replace="/fragments/side.html :: fragment-side"></div>
-			<div class="content">
-				<!-- TODO 값을 전달 받으면 아래 div는 삭제하고 주석 해제 -->
-				<div class="codeReviewDetailArea">
-					<header class="detail_context">
-						<span th:text="${codeReviewDetail.CR_TITLE}" style="margin: auto 0px;"></span> 
-						<!-- 
-						TODO
-						Star노출 기준 만들어서 둘중 하나만 나오게 만들기 -->
-						<img alt="스타" th:src="@{/img/빈별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;"> 
-						<img alt="스타" th:src="@{/img/꽉찬별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;"> 
-					</header>
-					<header class="detail_context" style="margin-top: 20px">
-						<span th:text="Row_숫자"></span> <span th:text="${codeTextListLength}"></span><span th:text="Lines"></span>
-						<img th:if="${isEdit} == true" alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit([[${codeReviewDetail.CR_NO}]])" style="width: 20px; float: right;">
-					</header>
-					<div class="textAreaEdit">
-						<article class="textLines" th:each="item, indexVal : ${codeTextList}">
-							<p class="commentYN commentY" th:if="${codeReviewDetail.CR_QUE_COMMENTYN} == 'Y'" style="background-color: gray;" th:text="${item}" th:onclick="commentView(event, [[${indexVal.index}]])"></p>
-							<p class="commentYN commentN" th:if="${codeReviewDetail.CR_QUE_COMMENTYN} == 'N'" th:text="${item}" th:onclick="commentView(event, [[${indexVal.index}]])"></p>
-							<!-- <p class="commentYN commentN" th:text="${item}"  th:onclick="commentView(event, [[${indexVal.index}]])"></p> -->
-							<div class="commentManage" th:id="${indexVal.index}" style="display: none; padding-left: 15px;">
-								<div th:each="commentsItems, commentsListIndex : ${commentsList}">
-									<div class="codeReviewTextLineComments" th:if="${commentsItems.CM_INDEX} == ${indexVal.index}">
-										<div class="codeReviewTextLineComments commentArea">
-											<span class="codeReviewTextLineComments span" th:text="${commentsItems.CM_CREATER.MBR_NICNAME}"></span>
-												<!-- 
-												TODO
-												Star노출 기준 만들어서 둘중 하나만 나오게 만들기 -->
-												<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;"> 
-												<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;">
-												<span th:text="${commentsItems.CM_CREATEDAY}"></span>
-												<img th:if="${isCommentEdit} == true" alt="edit" th:src="@{/img/edit.png}" th:onclick="commentEdit([[${commentsItems.CM_NO}]])" style="width: 20px; float: right;">
-												<span th:if="${isCommentEdit} == true" th:onclick="commentDelete([[${commentsItems.CM_NO}]])" th:text="삭제"></span>
-											<div>
-												<p th:utext="${commentsItems.CM_CONTENTS}"></p>
-												<div th:id="${commentsItems.CM_NO}" style="display: none; padding-bottom: 20px; padding-left: 20px; border: solid;border-color: black; border-width: thin;">
-													<p class="codeReviewTextLinePTag">Comment Edit</p>
-													<div style="margin-top: 10px">
-														<textarea class="textareaTag editTextLineComment" th:id="${commentsItems.CM_NO} + EditTextLineComment" th:utext="${commentsItems.CM_CONTENTS}" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
-														<button style="width: 9%; height: 30px" th:onclick="commentSave([[${indexVal.index}]], [[${commentsItems.CM_NO}]])">등록</button>
+	<head>
+		<div th:replace="/fragments/meta.html :: fragment-meta"></div>
+	</head>
+	
+	<body>
+		<section id="wrap">
+			<div th:replace="/fragments/header.html :: fragment-header"></div>
+			<section id="content_wrap">
+				<div th:replace="/fragments/side.html :: fragment-side"></div>
+				<div class="content">
+					<div class="codeReviewDetailArea">
+						<header class="detail_context">
+							<span th:text="${codeReviewDetail.CR_TITLE}" style="margin: auto 0px;"></span> 
+							<!-- 
+							TODO
+							1. 이 글이 정보제공성 글이라면 댓글에는 스타가 표시되지 않고 전체 글에 대한 스트만 표시되어야함
+							2. 이 글이 코드리뷰성 글이라면 댓글에는 스타가 표시되고 전체글에는 표시되지 않아야함
+							>>>>> 위 두개 조건을 판단해서 조건을 설정한게 th:if="${codeReviewDetail.CR_TYPE}에요오
+							3. 내가 작성한 글에는 스타가 표시되어서는 안됌
+							>>>>> 내 정보는 세션에 들어있어용 
+							4. Star노출 기준 만들어서 둘중 하나만 나오게 만들기
+							>>>>> 스타를 눌렀을 경우 빈별은 꽉찬별로 꽉찬별은 빈별로 바뀌면서 CodeReview테이블의 Star Count를 수정해줘야함
+							-->
+							<!-- <img alt="스타" th:src="@{/img/빈별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;"> 
+							<img alt="스타" th:src="@{/img/꽉찬별.png}" th:if="${codeReviewDetail.CR_TYPE} == 'info'" th:onclick="starChange([[${codeReviewDetail.CR_NO}]])" style="width: 20px;">  -->
+						</header>
+						<header class="detail_context" style="margin-top: 20px">
+							<span th:text="Row_숫자"></span> <span th:text="${codeTextListLength}"></span><span th:text="Lines"></span>
+							<img th:if="${isEdit} == true" alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit([[${codeReviewDetail.CR_NO}]])" style="width: 20px; float: right;">
+						</header>
+						<div class="textAreaEdit">
+							<article class="textLines" th:each="item, indexVal : ${codeTextList}">
+								<p class="commentYN" th:id="${indexVal.index} + commentYN" th:text="${item}" th:onclick="commentView(event, [[${indexVal.index}]])"></p>
+								<div class="commentManage" th:id="${indexVal.index}" style="display: none; padding-left: 15px;">
+									<div th:each="commentsItems, commentsListIndex : ${commentsList}" th:if="${commentsItems.CM_INDEX} == ${indexVal.index}">
+										<body th:onload="commentColorChange([[${indexVal.index}]])"></body>
+										<div class="codeReviewTextLineComments"> 
+											<div class="codeReviewTextLineComments commentArea">
+												<span class="codeReviewTextLineComments span" th:text="${commentsItems.CM_CREATER.MBR_NICNAME}"></span>
+													
+													<!-- 
+													TODO
+													1. 이 글이 정보제공성 글이라면 댓글에는 스타가 표시되지 않고 전체 글에 대한 스트만 표시되어야함
+													2. 이 글이 코드리뷰성 글이라면 댓글에는 스타가 표시되고 전체글에는 표시되지 않아야함
+													>>>>> 위 두개 조건을 판단해서 조건을 설정한게 th:if="${codeReviewDetail.CR_TYPE}에요오
+													3. 내가 작성한 글에는 스타가 표시되어서는 안됌
+													>>>>> 내 정보는 세션에 들어있어용 
+													4. Star노출 기준 만들어서 둘중 하나만 나오게 만들기
+													>>>>> 스타를 눌렀을 경우 빈별은 꽉찬별로 꽉찬별은 빈별로 바뀌면서 CodeReview테이블의 Star Count를 수정해줘야함
+													-->
+													<!-- <img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;"> 
+													<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange([[${indexVal.index}]])" style="width: 20px;"> -->
+													<span th:text="${commentsItems.CM_CREATEDAY}"></span>
+													<img th:if="${isCommentEdit} == true" alt="edit" th:src="@{/img/edit.png}" th:onclick="commentEdit([[${commentsItems.CM_NO}]])" style="width: 20px; float: right;">
+													<span th:if="${isCommentEdit} == true" th:onclick="commentDelete([[${commentsItems.CM_NO}]])" th:text="삭제"></span>
+												<div>
+													<p th:utext="${commentsItems.CM_CONTENTS}"></p>
+													<div th:id="${commentsItems.CM_NO}" style="display: none; padding-bottom: 20px; padding-left: 20px; border: solid;border-color: black; border-width: thin;">
+														<p class="codeReviewTextLinePTag">Comment Edit</p>
+														<div style="margin-top: 10px">
+															<textarea class="textareaTag editTextLineComment" th:id="${commentsItems.CM_NO} + EditTextLineComment" th:utext="${commentsItems.CM_CONTENTS}" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
+															<button style="width: 9%; height: 30px" th:onclick="commentSave([[${indexVal.index}]], [[${commentsItems.CM_NO}]])">등록</button>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="commentManageFixedAe">
-									<p class="codeReviewTextLinePTag">Comments</p>
-									<div class="codeReviewTextLine" style="margin-top: 10px">
-										<textarea class="codeReviewTextLine textareaTag textLineComment" rows="" cols=""></textarea>
-										<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px" th:onclick="commentSave([[${indexVal.index}]])">등록</button>
+									<div class="commentManageFixedAe">
+										<p class="codeReviewTextLinePTag">Comments</p>
+										<div class="codeReviewTextLine" style="margin-top: 10px">
+											<textarea class="codeReviewTextLine textareaTag textLineComment" rows="" cols=""></textarea>
+											<button class="codeReviewTextLine buttonTag" style="width: 9%; height: 30px" th:onclick="commentSave([[${indexVal.index}]])">등록</button>
+										</div>
 									</div>
 								</div>
-							</div>
-						</article> 
-					</div>
-					<!-- 
-					TODO
-					댓글 작성기능이 만들어지면 아래 작업 -->
-					<footer class="reviewDetailFooter" style="margin-top: 20px">
-						<div th:each="commentsItems, commentsListIndex : ${commentsList}">
-							<div class="codeReviewComments" th:if="${commentsItems.CM_INDEX} == 999999999999999999">
-								<!-- 댓글이 여러개면 commentArea를 th:each로 돌려주기 -->
-								<div class="commentArea">
-									<span class="codeReviewTextLineComments span" th:text="${commentsItems.CM_CREATER.MBR_NICNAME}"></span>
-									<!-- 
-										TODO
-										Star노출 기준 만들어서 둘중 하나만 나오게 만들기 -->
-										<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange()" style="width: 20px;"> 
-										<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange()" style="width: 20px;">
-										<span th:text="${commentsItems.CM_CREATEDAY}"></span>
-										<img th:if="${isCommentEdit} == true" alt="commentEdit" th:src="@{/img/edit.png}"  th:onclick="commentEdit([[${commentsItems.CM_NO}]])" style="width: 20px; float: right;">
-										<span  th:if="${isCommentEdit} == true" th:onclick="commentDelete([[${commentsItems.CM_NO}]])" th:text="삭제"></span>
-									<div>
-										<p class = commentIsEdit th:utext="${commentsItems.CM_CONTENTS}"></p>
-										<div th:id="${commentsItems.CM_NO}" style="display: none; padding-bottom: 20px; padding-left: 20px; border: solid;border-color: black; border-width: thin;">
-											<p class="codeReviewTextLinePTag">Comment Edit</p>
-											<div style="margin-top: 10px">
-												<textarea class="textareaTag editMaintextarea" th:id="${commentsItems.CM_NO} + EditMaintextarea" th:utext="${commentsItems.CM_CONTENTS}" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
-												<button style="width: 9%; height: 30px" th:onclick="commentSave('undefined', [[${commentsItems.CM_NO}]])">등록</button>
+							</article> 
+						</div>
+						<footer class="reviewDetailFooter" style="margin-top: 20px">
+							<div th:each="commentsItems, commentsListIndex : ${commentsList}" th:if="${commentsItems.CM_INDEX} == 999999999999999999">
+								<div class="codeReviewComments">
+									<!-- 댓글이 여러개면 commentArea를 th:each로 돌려주기 -->
+									<div class="commentArea">
+										<span class="codeReviewTextLineComments span" th:text="${commentsItems.CM_CREATER.MBR_NICNAME}"></span>
+											<!-- 
+											TODO
+											1. 이 글이 정보제공성 글이라면 댓글에는 스타가 표시되지 않고 전체 글에 대한 스트만 표시되어야함
+											2. 이 글이 코드리뷰성 글이라면 댓글에는 스타가 표시되고 전체글에는 표시되지 않아야함
+											>>>>> 위 두개 조건을 판단해서 조건을 설정한게 th:if="${codeReviewDetail.CR_TYPE}에요오
+											3. 내가 작성한 글에는 스타가 표시되어서는 안됌
+											>>>>> 내 정보는 세션에 들어있어용 
+											4. Star노출 기준 만들어서 둘중 하나만 나오게 만들기
+											>>>>> 스타를 눌렀을 경우 빈별은 꽉찬별로 꽉찬별은 빈별로 바뀌면서 CodeReview테이블의 Star Count를 수정해줘야함
+											-->
+											<!-- <img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/빈별.png}" th:onclick="starChange()" style="width: 20px;"> 
+											<img alt="스타" th:if="${codeReviewDetail.CR_TYPE} == 'review'" th:src="@{/img/꽉찬별.png}" th:onclick="starChange()" style="width: 20px;"> -->
+											<span th:text="${commentsItems.CM_CREATEDAY}"></span>
+											<img th:if="${isCommentEdit} == true" alt="commentEdit" th:src="@{/img/edit.png}"  th:onclick="commentEdit([[${commentsItems.CM_NO}]])" style="width: 20px; float: right;">
+											<span  th:if="${isCommentEdit} == true" th:onclick="commentDelete([[${commentsItems.CM_NO}]])" th:text="삭제"></span>
+										<div>
+											<p class = commentIsEdit th:utext="${commentsItems.CM_CONTENTS}"></p>
+											<div th:id="${commentsItems.CM_NO}" style="display: none; padding-bottom: 20px; padding-left: 20px; border: solid;border-color: black; border-width: thin;">
+												<p class="codeReviewTextLinePTag">Comment Edit</p>
+												<div style="margin-top: 10px">
+													<textarea class="textareaTag editMaintextarea" th:id="${commentsItems.CM_NO} + EditMaintextarea" th:utext="${commentsItems.CM_CONTENTS}" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
+													<button style="width: 9%; height: 30px" th:onclick="commentSave('undefined', [[${commentsItems.CM_NO}]])">등록</button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						
-						<div class="commentMainManage">
-							<p class="codeReviewTextLinePTag">Comments</p>
-							<div style="margin-top: 10px">
-								<textarea class="textareaTag maintextarea" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
-								<button style="width: 9%; height: 30px" onclick="commentSave()">등록</button>
+							
+							<div class="commentMainManage">
+								<p class="codeReviewTextLinePTag">Comments</p>
+								<div style="margin-top: 10px">
+									<textarea class="textareaTag maintextarea" rows="" cols="" style="width: 90%;" placeholder="Add an optional extended description…"></textarea>
+									<button style="width: 9%; height: 30px" onclick="commentSave()">등록</button>
+								</div>
 							</div>
-						</div>
-					</footer>
+						</footer>
+					</div>
 				</div>
-			</div>
+			</section>
 		</section>
-	</section>
-</body>
-
-<th:block layout:fragment="script">
-	<script type="text/javascript">
-		// 댓글 펼쳐 보기
-		function commentView(event, id) {
-			console.log(id);
-			if (document.getElementById(id).style.display == "none") {
-				for ( var i in document.getElementsByClassName("commentManage")) {
-					if (i == "length") {
-						break;
-					}
-					document.getElementsByClassName("commentManage")[i].style['display'] = "none"
-				}
-				document.getElementById(id).style.display = "block";
-			} else if (document.getElementById(id).style.display == "block") {
-				document.getElementById(id).style.display = "none";
-			}
-		}
-		
-		// 글 수정화면으로 이동
-		function textEdit(CR_NO){
-			location.href = "/codeReview/write?CR_NO=" + CR_NO;
-		}
-
-		// TODO
-		// 댓글 수정 기능
-		function commentEdit(CommentNum){
-			if(document.getElementById(CommentNum).style['display'] == "block"){
-				document.getElementById(CommentNum).style['display'] = "none"
-			}else if(document.getElementById(CommentNum).style['display'] == "none"){
-				document.getElementById(CommentNum).style['display'] = "block"
-			}
-			//location.href = "/codeReview/write?CR_NO=" + CR_NO;
-		}
-		
-		// 글 출력 시 사용할 함수
-		function textRead(text){
-			text = text.replaceAll("&nbspN;", "\n");
-			text = text.replaceAll("&nbspT;", "\t");
-		}
-		
-		
-		// 댓글 저장
-		function commentSave(indexNum, editCommentNum){
-			let httpRequest = new XMLHttpRequest();
+	</body>
 	
-	        httpRequest.onreadystatechange = function () {
-	        	console.log(this);
-	    		if (this.readyState == 4) {
-	    			if (this.responseText == "save_null") {
-	           	    	alert("글을 등록하는 과정 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
-	           	    	document.getElementsByClassName("maintextarea")[0].value = "";
-	    				let text = document.getElementsByClassName("textLineComment")[indexNum].value = "";
-	           	    }
-	    			if (this.responseText == "CM_CONTENTS_null" || this.responseText == "CM_CR_NO_null") {
-	           	    	alert("글을 저장하는 중 오류가 발생하였습니다.\n댓글 내용을 반드시입력해주시기 바랍니다.\n 문제가 지속될 시 관리자에게 문의해주십시요.");
-	           	    	document.getElementsByClassName("maintextarea")[0].value = "";
-	    				let text = document.getElementsByClassName("textLineComment")[indexNum].value = "";
-	           	    }
-	           	    if (this.responseText == "true") {
-	           	    	alert("해당 글이 정상적으로 등록되었습니다.");
-	           	    	window.location.reload();
-	           	    }
-	           	    if (this.responseText == "Edit_Success") {
-	           	    	alert("해당 글이 정상적으로 수정되었습니다.");
-	           	    	window.location.reload();
-	           	    }
-	    		}
-	   	    }
-	    	httpRequest.open("POST", "/comment/doComment", true);
-	
-	    	let formData = new FormData();
-
-	        // 해당 요청이 수정요청인지 새글 작성요청인지 구분해주기
-	        var isEdit = false;
-	        if (editCommentNum != undefined){
-	        	isEdit = true;
-	        	formData.append('EditCommentNum', editCommentNum);
-	        }
-	        
-	    	
-	        if (indexNum == undefined || indexNum == 'undefined'){
-				let text = isEdit ? document.getElementById(editCommentNum+"EditMaintextarea").value : document.getElementsByClassName("maintextarea")[0].value;
-				// 줄바꿈 표현 저장하기
-				if (text.indexOf("\n") != -1){
-					text = text.replaceAll("\n", "<br>");
-				}
-		        formData.append('CM_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
-			} else {
-				let text = isEdit ? document.getElementById(editCommentNum+"EditTextLineComment").value : document.getElementsByClassName("textLineComment")[indexNum].value;
-				// 줄바꿈 표현 저장하기
-				if (text.indexOf("\n") != -1){
-					text = text.replaceAll("\n", "<br>");
-				}
-		        formData.append('CM_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
-	        	formData.append('CM_INDEX', indexNum);
-			}
-	        
-	        // 현재 글의 글번호를 입력해주기
-	        formData.append('CM_CR_NO', "[[${codeReviewDetail.CR_NO}]]");
-			
-	 		/* CR_CONTENTS : text */
-	   	 	httpRequest.send(formData);
-		}
-		
-		
-		// 댓글 삭제
-		function commentDelete(commentNum){
-			let httpRequest = new XMLHttpRequest();
-	        httpRequest.onreadystatechange = function () {
-	        	console.log(this);
-	    		if (this.readyState == 4) {
-	    			if (this.responseText == "delete_fail") {
-	           	    	alert("댓글을 삭제하지 못했습니다.\n관리자에게 문의하세요.");
-	           	    	document.getElementsByClassName("maintextarea")[0].value = "";
-	    				let text = document.getElementsByClassName("textareaTag")[indexNum].value = "";
-	           	    }
-	           	    if (this.responseText == "true") {
-	           	    	alert("해당 댓글이 정상적으로 삭제되었습니다.");
-	           	    	window.location.reload();
-	           	    }
-	    		}
-	   	    }
-	    	httpRequest.open("GET", "/comment/deleteComment?commentNum="+commentNum, true);
-	   	 	httpRequest.send();
-		}
-		
-		
-		// Text Line별로 댓글 관련 Block을 활성화 시켜주기
-		document.getElementsByTagName('body')[0].addEventListener(
-			'click',
-			function(event) {
-				if (event.target.className.indexOf('commentManage')
-						|| event.target.className.indexOf("codeReviewTextLineComments") != -1
-						|| event.target.className.indexOf("codeReviewTextLine") != -1) {
-					return
-				} else if (event.target.className == 'commentYN') {
-					return
-				} else {
+	<th:block layout:fragment="script">
+		<script type="text/javascript">
+			// 댓글 펼쳐 보기
+			function commentView(event, id) {
+				if (document.getElementById(id).style.display == "none") {
 					for ( var i in document.getElementsByClassName("commentManage")) {
 						if (i == "length") {
 							break;
 						}
 						document.getElementsByClassName("commentManage")[i].style['display'] = "none"
 					}
+					document.getElementById(id).style.display = "block";
+				} else if (document.getElementById(id).style.display == "block") {
+					document.getElementById(id).style.display = "none";
 				}
+			}
+			
+			// 글 수정화면으로 이동
+			function textEdit(CR_NO){
+				location.href = "/codeReview/write?CR_NO=" + CR_NO;
+			}
 	
-			});
-	</script>
-</th:block>
+			// 댓글 수정 기능
+			function commentEdit(CommentNum){
+				if(document.getElementById(CommentNum).style['display'] == "block"){
+					document.getElementById(CommentNum).style['display'] = "none"
+				}else if(document.getElementById(CommentNum).style['display'] == "none"){
+					document.getElementById(CommentNum).style['display'] = "block"
+				}
+			}
+			
+			// 글 출력 시 사용할 함수
+			function textRead(text){
+				text = text.replaceAll("&nbspN;", "\n");
+				text = text.replaceAll("&nbspT;", "\t");
+			}
+			
+			// 댓글 저장
+			function commentSave(indexNum, editCommentNum){
+				let httpRequest = new XMLHttpRequest();
+		
+		        httpRequest.onreadystatechange = function () {
+		    		if (this.readyState == 4) {
+		    			if (this.responseText == "save_null") {
+		           	    	alert("글을 등록하는 과정 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
+		           	    	document.getElementsByClassName("maintextarea")[0].value = "";
+		    				let text = document.getElementsByClassName("textLineComment")[indexNum].value = "";
+		           	    }
+		    			if (this.responseText == "CM_CONTENTS_null" || this.responseText == "CM_CR_NO_null") {
+		           	    	alert("글을 저장하는 중 오류가 발생하였습니다.\n댓글 내용을 반드시입력해주시기 바랍니다.\n 문제가 지속될 시 관리자에게 문의해주십시요.");
+		           	    	document.getElementsByClassName("maintextarea")[0].value = "";
+		    				let text = document.getElementsByClassName("textLineComment")[indexNum].value = "";
+		           	    }
+		           	    if (this.responseText == "true") {
+		           	    	alert("해당 글이 정상적으로 등록되었습니다.");
+		           	    	window.location.reload();
+		           	    }
+		           	    if (this.responseText == "Edit_Success") {
+		           	    	alert("해당 글이 정상적으로 수정되었습니다.");
+		           	    	window.location.reload();
+		           	    }
+		    		}
+		   	    }
+		    	httpRequest.open("POST", "/comment/doComment", true);
+		
+		    	let formData = new FormData();
+	
+		        // 해당 요청이 수정요청인지 새글 작성요청인지 구분해주기
+		        var isEdit = false;
+		        if (editCommentNum != undefined){
+		        	isEdit = true;
+		        	formData.append('EditCommentNum', editCommentNum);
+		        }
+		        
+		        if (indexNum == undefined || indexNum == 'undefined'){
+					let text = isEdit ? document.getElementById(editCommentNum+"EditMaintextarea").value : document.getElementsByClassName("maintextarea")[0].value;
+					// 줄바꿈 표현 저장하기
+					if (text.indexOf("\n") != -1){
+						text = text.replaceAll("\n", "<br>");
+					}
+			        formData.append('CM_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
+				} else {
+					let text = isEdit ? document.getElementById(editCommentNum+"EditTextLineComment").value : document.getElementsByClassName("textLineComment")[indexNum].value;
+					// 줄바꿈 표현 저장하기
+					if (text.indexOf("\n") != -1){
+						text = text.replaceAll("\n", "<br>");
+					}
+			        formData.append('CM_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
+		        	formData.append('CM_INDEX', indexNum);
+				}
+		        
+		        // 현재 글의 글번호를 입력해주기
+		        formData.append('CM_CR_NO', "[[${codeReviewDetail.CR_NO}]]");
+		   	 	httpRequest.send(formData);
+			}
+			
+			// 댓글 삭제
+			function commentDelete(commentNum){
+				let httpRequest = new XMLHttpRequest();
+		        httpRequest.onreadystatechange = function () {
+		    		if (this.readyState == 4) {
+		    			if (this.responseText == "delete_fail") {
+		           	    	alert("댓글을 삭제하지 못했습니다.\n관리자에게 문의하세요.");
+		           	    	document.getElementsByClassName("maintextarea")[0].value = "";
+		    				let text = document.getElementsByClassName("textareaTag")[indexNum].value = "";
+		           	    }
+		           	    if (this.responseText == "true") {
+		           	    	alert("해당 댓글이 정상적으로 삭제되었습니다.");
+		           	    	window.location.reload();
+		           	    }
+		    		}
+		   	    }
+		    	httpRequest.open("GET", "/comment/deleteComment?commentNum="+commentNum, true);
+		   	 	httpRequest.send();
+			}
+			
+			// 댓글 색 변경
+			function commentColorChange(textIndex){
+				document.getElementById(textIndex + "commentYN").style.backgroundColor = "gray";
+			}
+			
+			// Text Line별로 댓글 관련 Block을 활성화 시켜주기
+			document.getElementsByTagName('body')[0].addEventListener(
+				'click',
+				function(event) {
+					if (event.target.className.indexOf('commentManage')
+							|| event.target.className.indexOf("codeReviewTextLineComments") != -1
+							|| event.target.className.indexOf("codeReviewTextLine") != -1) {
+						return
+					} else if (event.target.className == 'commentYN') {
+						return
+					} else {
+						for ( var i in document.getElementsByClassName("commentManage")) {
+							if (i == "length") {
+								break;
+							}
+							document.getElementsByClassName("commentManage")[i].style['display'] = "none"
+						}
+					}
+				});
+		</script>
+	</th:block>
 </html>

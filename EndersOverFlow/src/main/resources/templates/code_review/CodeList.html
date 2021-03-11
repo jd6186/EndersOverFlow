@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http:www.thymeleaf.org">
-<head>
-<div th:replace="/fragments/meta.html :: fragment-meta"></div>
-</head>
-
-<body>
-	<section id="wrap">
-		<div th:replace="/fragments/header.html :: fragment-header"></div>
-		<section id="content_wrap">
-			<div th:replace="/fragments/side.html :: fragment-side"></div>
-			<div class="content">
-				<th:block th:each="item : ${codeReviewList}"> 
-					<div class="review_item" th:if="${item.CR_ISVIEW}=='Y'">
-						<div class="review_item" th:onclick="'javascript:searchDetail('+ ${item.CR_NO} + ');'" style="background-color: white; padding-top: 5px; padding-left: 10px; padding-right: 10px;">
-							<span th:text="${item.CR_TITLE}" style="margin: auto 0px;"></span>
-							<!-- 
-							TODO StarCount관련 테이블 생성되면 여기에 해당 Data를 조회해서 내가 눌렀는지 안눌렀는지 체크해주기
-							<img th:if="${별룰렀냐?} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 빈별로 바꿔주기
-							<img th:if="${별룰렀냐?} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 꽉찬별로 바꿔주기
-							 -->
-							<span th:text="${item.CR_UPDATEDAY}"></span>
+	<head>
+		<div th:replace="/fragments/meta.html :: fragment-meta"></div>
+	</head>
+	
+	<body>
+		<section id="wrap">
+			<div th:replace="/fragments/header.html :: fragment-header"></div>
+			<section id="content_wrap">
+				<div th:replace="/fragments/side.html :: fragment-side"></div>
+				<div class="content">
+					<th:block th:each="item : ${codeReviewList}"> 
+						<div class="review_item" th:if="${item.CR_ISVIEW}=='Y'">
+							<div class="review_item" th:onclick="'javascript:searchDetail('+ ${item.CR_NO} + ');'" style="background-color: white; padding-top: 5px; padding-left: 10px; padding-right: 10px;">
+								<span th:text="${item.CR_TITLE}" style="margin: auto 0px;"></span>
+								<!-- 
+								TODO StarCount관련 테이블 생성되면 여기에 해당 Data를 조회해서 내가 눌렀는지 안눌렀는지 체크해주기
+								<img th:if="${별룰렀냐?} == 'Y'" alt="스타" th:src="@{/img/꽉찬별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 빈별로 바꿔주기
+								<img th:if="${별룰렀냐?} == 'N'" alt="스타" th:src="@{/img/빈별.png}" th:onclick="starChange(${item.isStar})"> 클릭 하면 꽉찬별로 바꿔주기
+								 -->
+								<span th:text="${item.CR_UPDATEDAY}"></span>
+							</div>
 						</div>
-					</div>
-					<div style="border-bottom-color: black; border-style: solid; border-width: thin;"></div>
-				</th:block>
-			</div>
+						<div style="border-bottom-color: black; border-style: solid; border-width: thin;"></div>
+					</th:block>
+				</div>
+			</section>
 		</section>
-	</section>
-</body>
-<script type="text/javascript">
-	function starChange(isStar) {
-		if (isStar == 'Y') {
-			// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 N으로 바꾸고
-			// star 글 목록에서 해당 글의 star수를 -1 시키기 
-		} else {
-			// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 Y로 바꾸고
-			// star 글 목록에서 해당 글의 star수를 +1 시키기 
+	</body>
+	<script type="text/javascript">
+		function starChange(isStar) {
+			if (isStar == 'Y') {
+				// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 N으로 바꾸고
+				// star 글 목록에서 해당 글의 star수를 -1 시키기 
+			} else {
+				// ajax통신을 통해 내가 누른 star목록에서 해당 글의 isStar를 Y로 바꾸고
+				// star 글 목록에서 해당 글의 star수를 +1 시키기 
+			}
 		}
-	}
-	function searchDetail(no){
-		location.href = "/codeReview/detail?CR_NO="+no;
-	}
-</script>
+		function searchDetail(no){
+			location.href = "/codeReview/detail?CR_NO="+no;
+		}
+	</script>
 
 </html>

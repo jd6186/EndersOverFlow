@@ -1,173 +1,169 @@
 <!DOCTYPE html>
 <html xmlns:th="http:www.thymeleaf.org">
-<head>
-<div th:replace="/fragments/meta.html :: fragment-meta"></div>
-
-
-<style type="text/css">
-body > * ::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background-color: gray;
-}
-body > * ::-webkit-scrollbar {
-  width: 10px;  /* 세로축 스크롤바 길이 */
-  height: 20px;  /* 가로축 스크롤바 길이 */
-  background-color: #e8e8e8;
-}
-#editorDiv {
-	margin-top: 10px;
-}
-.CodeMirror-scroll{
-	background-color: #f8f8f8;
-}
-.codeWrite {
-	font-family:verdana;
-	font-size:160%;
-}
-.codeSave {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  float: right;
-  padding: 5px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-right: 5px;
-  border-radius: 15px;
-}
-.codeCancle {
-  background-color: #f44336; /* Green */
-  border: none;
-  color: white;
-  float: right;
-  padding: 5px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 15px;
-}
-</style>
-</head>
-
-<!-- TOAST API를 위한 Jquery Start -->
-<script
-  src="https://code.jquery.com/jquery-3.6.0.js"
-  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-  crossorigin="anonymous">
-  </script>
-<!-- TOAST API를 위한 Jquery End -->
-
-<!-- TOAST API를 위한 Bootstrap Start -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<!-- TOAST API를 위한 Bootstrap End -->
-
-<!-- TOAST Editor Start-->
-<!-- Styles -->
-<link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css"></link>
-<link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css"></link>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css"></link>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"></link>
-<!-- Scripts -->
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-
-
-<th:block layout:fragment="script">
-<script type="text/javascript">
-	
-	var editor = null;
-	var editData = false;
-	document.addEventListener('DOMContentLoaded', ()=> {
-		editor = new tui.Editor({
-			el: document.querySelector('#editorDiv'),
-			initialEditType: 'markdown',
-			previewStyle: 'vertical',
-			height: '85%'
-		});
-		textWrite();
-	});
-	function codeSave(){
-		var text = editor.getMarkdown();
-		if (text.indexOf("\n") != -1){
-			text = text.replaceAll("\n", "&nbspN;");
-		}
-		var title = document.getElementById('title').value;
-		var type = document.getElementById('written').value;
+	<head>
+		<div th:replace="/fragments/meta.html :: fragment-meta"></div>
+		<style type="text/css">
+			body > * ::-webkit-scrollbar-thumb {
+			  border-radius: 8px;
+			  background-color: gray;
+			}
+			body > * ::-webkit-scrollbar {
+			  width: 10px;  /* 세로축 스크롤바 길이 */
+			  height: 20px;  /* 가로축 스크롤바 길이 */
+			  background-color: #e8e8e8;
+			}
+			#editorDiv {
+				margin-top: 10px;
+			}
+			.CodeMirror-scroll{
+				background-color: #f8f8f8;
+			}
+			.codeWrite {
+				font-family:verdana;
+				font-size:160%;
+			}
+			.codeSave {
+			  background-color: #4CAF50; /* Green */
+			  border: none;
+			  color: white;
+			  float: right;
+			  padding: 5px 15px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 16px;
+			  margin-right: 5px;
+			  border-radius: 15px;
+			}
+			.codeCancle {
+			  background-color: #f44336; /* Green */
+			  border: none;
+			  color: white;
+			  float: right;
+			  padding: 5px 15px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 16px;
+			  border-radius: 15px;
+			}
+		</style>
 		
-		let httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = function () {
-        	console.log(this);
-    		if (this.readyState == 4) {
-    			if (this.responseText == "save_null") {
-           	    	alert("글을 등록하는 과정 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
-           	    	document.getElementById("signupEmailField").value = "";
-           	    }
-    			if (this.responseText == "req_value_null") {
-           	    	alert("제목과 글을 모두 입력해주세요");
-           	    	document.getElementById("signupEmailField").value = "";
-           	    }
-           	    if (this.responseText == "true") {
-           	    	alert("해당 글이 정상적으로 등록되었습니다.");
-           	    	location.href="/codeReview/list";
-           	    }
-           	    if (this.responseText == "false") {
-           	    	alert("제목과 내용은 모두 입력되어야합니다.");
-           	    }
-    		}
-   	    }
-    	httpRequest.open("POST", "/codeReview/doWrite", true);
-
-        
-    	let formData = new FormData();
-        formData.append('CR_TITLE', title.replace(/\s/g,''));
-        formData.append('CR_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
-        formData.append('CR_TYPE', type.replace(/\s/g,''));
-
- 		/* CR_CONTENTS : text */
-   	 	httpRequest.send(formData);
-	}
-
-	function textInsert(){
-		let respText = "[[ ${EditText.CR_CONTENTS} ]]";
-		respText = respText.replaceAll("&amp;nbspN;", "\n");
-    	return respText
-	}
-	function textWrite(){
-		var text = textInsert();
-		editor.setMarkdown(text);
-	}
-</script>
-</th:block>
-<!-- TOAST Editor End-->
-
-<body>
-	<section id="wrap">
-		<div th:replace="/fragments/header.html :: fragment-header"></div>
-		<section id="content_wrap">
-			<div th:replace="/fragments/side.html :: fragment-side"></div>
-			<div class="content">
-				<div style="background-color: white;">
-					<span class="codeWrite">Code Write</span>
-					<select id="written">
-						<option>review</option>
-						<option>info</option>
-					</select>
+		<!-- TOAST API를 위한 Jquery Start -->
+		<script
+		  src="https://code.jquery.com/jquery-3.6.0.js"
+		  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+		  crossorigin="anonymous">
+		  </script>
+		<!-- TOAST API를 위한 Jquery End -->
+		
+		<!-- TOAST API를 위한 Bootstrap Start -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+		<!-- TOAST API를 위한 Bootstrap End -->
+		
+		<!-- TOAST Editor Start-->
+		<!-- Styles -->
+		<link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css"></link>
+		<link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css"></link>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css"></link>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"></link>
+		<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+		<!-- TOAST Editor End-->
+	</head>
+	
+	<body>
+		<section id="wrap">
+			<div th:replace="/fragments/header.html :: fragment-header"></div>
+			<section id="content_wrap">
+				<div th:replace="/fragments/side.html :: fragment-side"></div>
+				<div class="content">
+					<div style="background-color: white;">
+						<span class="codeWrite">Code Write</span>
+						<select id="written">
+							<option>review</option>
+							<option>info</option>
+						</select>
+					</div>
+					<div style="margin-top: 15px;">
+						<span>Title : </span>
+						<input type="text" th:value="${EditText.CR_TITLE}" id="title" style="border-width: 2px; border-style: solid; border-radius: 5px; width: 300px;">
+						<button class="codeCancle">취소</button>
+						<button class="codeSave" onclick="codeSave();">저장</button>
+					</div>
+	                <div id="editorDiv">
+	                </div>
 				</div>
-				<div style="margin-top: 15px;">
-					<span>Title : </span>
-					<input type="text" th:value="${EditText.CR_TITLE}" id="title" style="border-width: 2px; border-style: solid; border-radius: 5px; width: 300px;">
-					<button class="codeCancle">취소</button>
-					<button class="codeSave" onclick="codeSave();">저장</button>
-				</div>
-                <div id="editorDiv">
-                </div>
-			</div>
+			</section>
 		</section>
-	</section>
-</body>
+	</body>
+	
+	<th:block layout:fragment="script">
+		<script type="text/javascript">
+			
+			var editor = null;
+			var editData = false;
+			document.addEventListener('DOMContentLoaded', ()=> {
+				editor = new tui.Editor({
+					el: document.querySelector('#editorDiv'),
+					initialEditType: 'markdown',
+					previewStyle: 'vertical',
+					height: '85%'
+				});
+				textWrite();
+			});
+			function codeSave(){
+				var text = editor.getMarkdown();
+				if (text.indexOf("\n") != -1){
+					text = text.replaceAll("\n", "&nbspN;");
+				}
+				var title = document.getElementById('title').value;
+				var type = document.getElementById('written').value;
+				
+				let httpRequest = new XMLHttpRequest();
+		
+		        httpRequest.onreadystatechange = function () {
+		        	console.log(this);
+		    		if (this.readyState == 4) {
+		    			if (this.responseText == "save_null") {
+		           	    	alert("글을 등록하는 과정 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
+		           	    	document.getElementById("signupEmailField").value = "";
+		           	    }
+		    			if (this.responseText == "req_value_null") {
+		           	    	alert("제목과 글을 모두 입력해주세요");
+		           	    	document.getElementById("signupEmailField").value = "";
+		           	    }
+		           	    if (this.responseText == "true") {
+		           	    	alert("해당 글이 정상적으로 등록되었습니다.");
+		           	    	location.href="/codeReview/list";
+		           	    }
+		           	    if (this.responseText == "false") {
+		           	    	alert("제목과 내용은 모두 입력되어야합니다.");
+		           	    }
+		    		}
+		   	    }
+		    	httpRequest.open("POST", "/codeReview/doWrite", true);
+		
+		        
+		    	let formData = new FormData();
+		        formData.append('CR_TITLE', title.replace(/\s/g,''));
+		        formData.append('CR_CONTENTS', text.replace(/\t/g,'  ').replace(/\s/g,' '));
+		        formData.append('CR_TYPE', type.replace(/\s/g,''));
+		
+		 		/* CR_CONTENTS : text */
+		   	 	httpRequest.send(formData);
+			}
+		
+			function textInsert(){
+				let respText = "[[ ${EditText.CR_CONTENTS} ]]";
+				respText = respText.replaceAll("&amp;nbspN;", "\n");
+		    	return respText
+			}
+			function textWrite(){
+				var text = textInsert();
+				editor.setMarkdown(text);
+			}
+		</script>
+	</th:block>
 </html>
