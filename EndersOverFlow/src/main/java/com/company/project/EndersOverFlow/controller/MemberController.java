@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +66,10 @@ public class MemberController {
 				String uuid = UUID.randomUUID().toString();
 				searchMember.setMBR_LOGINUUID(uuid);
 				boolean result = memberService.loginUuidUpdate(searchMember);
+				HttpSession session = request.getSession();
+				session.setAttribute("userEmail", searchMember.getMBR_EMAIL());
+				session.setAttribute("userAuth", searchMember.getMBR_AUTH());
 				if (result) {
-					model.addAttribute("userEmail", uuid);
 					return new ResponseEntity("login", HttpStatus.OK);
 				} else {
 		        	return new ResponseEntity("false", HttpStatus.OK);
