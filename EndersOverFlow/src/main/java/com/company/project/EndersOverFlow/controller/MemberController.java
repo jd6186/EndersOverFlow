@@ -1,5 +1,6 @@
 package com.company.project.EndersOverFlow.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -82,9 +84,18 @@ public class MemberController {
 		} catch (Exception e) {
         	return new ResponseEntity("false", HttpStatus.OK);
 		}
-		
 	}
 
+	// 로그아웃 진행
+	@GetMapping(path = "/dologout")
+	public void doLogoutPage(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException{
+		logger.info("login 페이지 진입");
+		HttpSession session = request.getSession();
+		session.setAttribute("userEmail", "");
+		session.setAttribute("userAuth", "");
+		response.sendRedirect("/member/login");
+	}
+	
 	// 회원 입력
 	@PostMapping(path = "/signUpMember")
 	public String signupPage(@Validated Member member){

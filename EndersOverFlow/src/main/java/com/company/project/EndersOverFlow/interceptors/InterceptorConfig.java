@@ -18,8 +18,10 @@ public class InterceptorConfig implements WebMvcConfigurer{
 	public void addInterceptors(InterceptorRegistry registry) {
 		log.info("InterceptorConfig addInterceptors 시작");
 		registry.addInterceptor(interceptorAuthCheck)
-	        .addPathPatterns("/*")
-	        .excludePathPatterns("/member/*"); //로그인 쪽은 예외처리를 한다.
+	        .addPathPatterns("/")
+	        .addPathPatterns("/codeReview/*")
+	        .addPathPatterns("/comments/*")
+	        .excludePathPatterns("/member/**"); //로그인 쪽은 예외처리를 한다.
 		log.info("InterceptorConfig addInterceptors 종료");
 	}
 }
