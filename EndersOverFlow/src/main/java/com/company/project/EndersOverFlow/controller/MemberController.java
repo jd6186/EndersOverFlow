@@ -108,7 +108,6 @@ public class MemberController {
 		return "redirect:/member/login";
 	}
 
-
 	// 전체 회원 조회
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	public String getAllmembers(Model model) {
