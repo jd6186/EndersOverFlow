@@ -32,6 +32,19 @@ public class Member {
 		MBR_SIGNUP_DATE = mBR_SIGNUP_DATE;
 		MBR_PASSWORD_UPDATE_DATE = mBR_PASSWORD_UPDATE_DATE;
 	}
+	
+
+	public Member(String mBR_EMAIL, String mBR_PASSWORD, String mBR_NICNAME, String mBR_AUTH, LocalDate mBR_SIGNUP_DATE,
+			LocalDate mBR_PASSWORD_UPDATE_DATE, String mBR_LOGINUUID) {
+		super();
+		MBR_EMAIL = mBR_EMAIL;
+		MBR_PASSWORD = mBR_PASSWORD;
+		MBR_NICNAME = mBR_NICNAME;
+		MBR_AUTH = mBR_AUTH;
+		MBR_SIGNUP_DATE = mBR_SIGNUP_DATE;
+		MBR_PASSWORD_UPDATE_DATE = mBR_PASSWORD_UPDATE_DATE;
+		MBR_LOGINUUID = mBR_LOGINUUID;
+	}
 
 	public Member(Long mBR_NO, String mBR_EMAIL, String mBR_PASSWORD, String mBR_NICNAME, String mBR_AUTH) {
 		super();
@@ -110,9 +123,7 @@ public class Member {
 	public String toString() {
 		return "Member [MBR_NO=" + MBR_NO + ", MBR_EMAIL=" + MBR_EMAIL + ", MBR_PASSWORD=" + MBR_PASSWORD
 				+ ", MBR_NICNAME=" + MBR_NICNAME + ", MBR_AUTH=" + MBR_AUTH + ", MBR_SIGNUP_DATE=" + MBR_SIGNUP_DATE
-				+ ", MBR_PASSWORD_UPDATE_DATE=" + MBR_PASSWORD_UPDATE_DATE + "]";
+				+ ", MBR_PASSWORD_UPDATE_DATE=" + MBR_PASSWORD_UPDATE_DATE + ", MBR_LOGINUUID=" + MBR_LOGINUUID + "]";
 	}
-
-	
 
 }

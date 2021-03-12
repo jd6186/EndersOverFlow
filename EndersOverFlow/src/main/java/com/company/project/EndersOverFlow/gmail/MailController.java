@@ -56,10 +56,12 @@ public class MailController {
 		logger.info("signup 임시 유저 정보 저장 시작");
 		LocalDate nowDate = LocalDate.now();
 		String uuid = UUID.randomUUID().toString();
+		System.out.println("member : " + member);
 		member.setMBR_EMAIL(member.getMBR_EMAIL().split("@")[0]);
         member.setMBR_SIGNUP_DATE(nowDate);
         member.setMBR_PASSWORD_UPDATE_DATE(nowDate);
         member.setMBR_LOGINUUID(uuid);
+        member.setMBR_AUTH("N");
         memberService.doSignUp(member);
 		logger.info("signup 임시 유저 정보 저장 완료");
 
@@ -68,7 +70,7 @@ public class MailController {
 		if (type != null && type.equals("multipart")) {
 			sendMultipartMail();
 		} else {
-			sendSimpleMail("jd363@enders.co.kr", member.getMBR_EMAIL()+"@enders.co.kr", "가입 승인 요청 메일입니다.", "권한승인을 요청합니다. 가입을 원하실 경우 아래 인증번호를 입력해주세요: \n 인증번호 : "+ uuid +"'></a>");
+			sendSimpleMail("jd363@enders.co.kr", member.getMBR_EMAIL()+"@enders.co.kr", "가입 승인 요청 메일입니다.", "권한승인을 요청합니다. 가입을 원하실 경우 아래 인증번호를 입력해주세요: \n 인증번호 : "+ uuid);
 		}
 		logger.info("유저 인증 메일 발송 종료");
     	return "redirect:/member/login";
@@ -104,7 +106,7 @@ public class MailController {
 	    System.out.println("Session 통과완룡");
 	    try {
 			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress(fromEmail, "jd363@enders.co.kr"));
+			msg.setFrom(new InternetAddress(fromEmail, "EndersOverFlow_Admin"));
 			msg.addRecipient(Message.RecipientType.TO,
 		                   new InternetAddress(toEmail, "toEmail"));
 			msg.setSubject(subject);

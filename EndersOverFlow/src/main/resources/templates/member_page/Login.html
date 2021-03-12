@@ -54,7 +54,7 @@
                 httpRequest.onreadystatechange = function () {
             		if (this.readyState == 4) {
             			if (this.responseText == "emailFalse") {
-                   	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
+                   	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@enders.co.kr");
                    	    	document.getElementById("signupEmailField").value = "";
                    	    }
                    	    if (this.responseText == "true") {
@@ -74,6 +74,7 @@
             	let httpRequest = new XMLHttpRequest();
 
                 httpRequest.onreadystatechange = function () {
+                	console.log(this);
             		if (this.readyState == 4) {
             			if (this.responseText == "login") {
                	    		location.href = "/";
@@ -82,7 +83,7 @@
                    	    	var authCode = prompt("인증이 필요합니다. 발송된 인증코드를 입력해주세요.");
                    	    	var authResult = authCheck(authCode);
                    	    	if (authResult){
-                   	    		location.href = "/";
+                   	    		location.href = "/member/login";
                    	    	}
                    	    }
                    	    if (this.responseText == "false") {
@@ -91,11 +92,12 @@
                    	    }
             		}
            	    }
-            	httpRequest.open("POST", "/member/dologin=" + document.getElementById("signupEmailField").value);
+            	httpRequest.open("POST", "/member/dologin", true);
             	let formData = new FormData();
-		        formData.append('emailField', document.getElementById("emailField").value.replace(/\s/g,''));
-		        formData.append('passwordField', document.getElementById("passwordField").replace(/\t/g,'  ').replace(/\s/g,' '));
-           	 	httpRequest.send();
+            	console.log(document.getElementById("emailField").value);
+		        formData.append('emailField', document.getElementById("emailField").value);
+		        formData.append('passwordField', document.getElementById("passwordField").value);
+           	 	httpRequest.send(formData);
            	}	
             
             function authCheck(authCode){
@@ -103,22 +105,15 @@
 
                 httpRequest.onreadystatechange = function () {
             		if (this.readyState == 4) {
-            			if (this.responseText == "login") {
-                   	    	alert("엔더스 이메일 주소만 입력 가능합니다. example@eners.co.kr");
-                   	    	document.getElementById("signupEmailField").value = "";
-                   	    }
-                   	    if (this.responseText == "authCheck") {
-                   	    	var authCode = prompt("인증이 필요합니다. 발송된 인증코드를 입력해주세요.");
-                   	    	
+            			if (this.responseText == "true") {
+                   	    	alert("EndersOverFlow 회원가입을 축하드립니다. 다시 로그인해주세요");
                    	    }
                    	    if (this.responseText == "false") {
-                   	    	alert("중복되는 아이디가 있습니다.");
-                   	    	document.getElementById("emailField").value = "";
-                   	    	document.getElementById("emailField").value = "";
+                   	    	alert("코드입력이 잘못되었습니다.\n다시 시도해주세요.");
                    	    }
             		}
            	    }
-            	httpRequest.open("GET", "/member/emailCheck?MBR_EMAIL=" + document.getElementById("signupEmailField").value);
+            	httpRequest.open("GET", "/member/authCheck?authCode=" + authCode);
            	 	httpRequest.send();
            	}	
         </script>

@@ -44,7 +44,8 @@ public class MemberService{
 
 	public Member findMember (String MBR_EMAIL) { 
 		logger.info("findMember Service 진입");
-		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_EMAIL='" + MBR_EMAIL + "' AND m.MBR_AUTH='Y'"; 
+		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_EMAIL='" + MBR_EMAIL + "'"; 
+		System.out.println(rowQuery);
 		try {
 			Member member = entityManager.createQuery(rowQuery, Member.class)
 					.getSingleResult();
@@ -52,7 +53,7 @@ public class MemberService{
 			return member;
 		} catch (NoResultException e) {
 			logger.warn("데이터가 없습니다." + e);
-			logger.info("findMember Service 종료");
+			logger.warn("findMember Service 비정상 종료");
 			return null;
 		}
 	}
@@ -63,11 +64,11 @@ public class MemberService{
 		try {
 			Member member = entityManager.createQuery(rowQuery, Member.class)
 					.getSingleResult();
-			logger.info("userCheck Service 종료");
+			logger.info("userCheck Service 정상 종료");
 			return member;
 		}catch (Exception e) {
 			logger.warn("데이터가 없습니다." + e);
-			logger.info("userCheck Service 종료");
+			logger.warn("userCheck Service 비정상 종료");
 			return null;
 		}
 	}
@@ -85,6 +86,21 @@ public class MemberService{
 		return member;
 	}
 
+	public Member findMemberByUUID (String MBR_UUID) { 
+		logger.info("findMember Service 진입");
+		String rowQuery = "select m from ENDERS_MEMBER m where m.MBR_LOGINUUID='" + MBR_UUID + "' AND m.MBR_AUTH='N'"; 
+		try {
+			Member member = entityManager.createQuery(rowQuery, Member.class)
+					.getSingleResult();
+			logger.info("findMemberByUUID Service 정상 종료");
+			return member;
+		} catch (NoResultException e) {
+			logger.warn("데이터가 없습니다." + e);
+			logger.warn("findMemberByUUID Service 비정상 종료");
+			return null;
+		}
+	}
+	
 	public Boolean passwordUpdate(String MBR_EMAIL, String MBR_PASSWORD, String MBR_NEW_PASSWORD, Member member) {
 		logger.info("passwordUpdate Service 진입");
 		Optional<Member> e = memberRepository.findById(member.getMBR_NO());
@@ -111,7 +127,7 @@ public class MemberService{
 			return true;
 		} catch (Exception e) {
 			logger.warn("업데이트 실패." + e);
-			logger.info("loginUuidUpdate Service 종료");
+			logger.warn("loginUuidUpdate Service 비정상 종료");
 			return false;
 		}
 	}

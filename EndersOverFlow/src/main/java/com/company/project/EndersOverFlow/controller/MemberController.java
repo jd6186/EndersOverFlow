@@ -55,8 +55,9 @@ public class MemberController {
 		logger.info("login 페이지 진입");
 		
 		// 이메일 정보로 맴버 확인하기
-		String emailField = (String) request.getAttribute("emailField");
-		String passwordField = (String) request.getAttribute("passwordField");
+		String emailField = (String) request.getParameter("emailField");
+		String passwordField = (String) request.getParameter("passwordField");
+		System.out.println(emailField + " : " + passwordField);
 		try {
 			Member searchMember = memberService.findMember(emailField);
 			// 맴버비밀번호 확인
@@ -104,7 +105,7 @@ public class MemberController {
 		return "redirect:/SignUpPage";
 	}
 
-	// 회원번호로 한명의 회원 조회
+	// 회원이메일로 한명의 회원 조회
 	@RequestMapping("/emailCheck")
 	public ResponseEntity emailCheck(@RequestParam(value="MBR_EMAIL", required=false, defaultValue="value_is_null") String emailField) {
 		logger.info("회원 중복 확인 페이지 진입");
@@ -140,5 +141,21 @@ public class MemberController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
+	// 회원UUID로 회원가입 승인여부 판단
+	@RequestMapping("/authCheck")
+	public ResponseEntity authCheck(@RequestParam(value="authCode", required=false, defaultValue="value_is_null") String authCode) {
+		logger.info("회원 중복 확인 페이지 진입");
+		if (authCode.equals("value_is_null")) {
+			return new ResponseEntity("false", HttpStatus.OK);
+		}
+		// 유저 체크
+		Member member = memberService.findMemberByUUID(authCode);
+		if (member == null) {
+			return new ResponseEntity("false", HttpStatus.OK);
+		}
+		member.setMBR_AUTH("Y");
+		memberService.doSignUp(member);
+		return new ResponseEntity("true", HttpStatus.OK);
+	}
 
 }
