@@ -29,6 +29,7 @@
 						<header class="detail_context" style="margin-top: 20px">
 							<span th:text="Row_숫자"></span> <span th:text="${codeTextListLength}"></span><span th:text="Lines"></span>
 							<img th:if="${isEdit} == true" alt="edit" th:src="@{/img/edit.png}" th:onclick="textEdit([[${codeReviewDetail.CR_NO}]])" style="width: 20px; float: right;">
+							<span th:if="${isEdit} == true" th:onclick="codeReviewDelete([[${codeReviewDetail.CR_NO}]])" th:text="삭제"></span>
 						</header>
 						<div class="textAreaEdit">
 							<article class="textLines" th:each="item, indexVal : ${codeTextList}">
@@ -129,6 +130,13 @@
 	
 	<th:block layout:fragment="script">
 		<script type="text/javascript">
+
+			// 글 출력 시 사용할 함수
+			function textRead(text){
+				text = text.replaceAll("&nbspN;", "\n");
+				text = text.replaceAll("&nbspT;", "\t");
+			}
+		
 			// 댓글 펼쳐 보기
 			function commentView(event, id) {
 				if (document.getElementById(id).style.display == "none") {
@@ -158,11 +166,25 @@
 				}
 			}
 			
-			// 글 출력 시 사용할 함수
-			function textRead(text){
-				text = text.replaceAll("&nbspN;", "\n");
-				text = text.replaceAll("&nbspT;", "\t");
+			
+			// 글 삭제 codeReviewDelete
+			function codeReviewDelete(codeReviewNum){
+				let httpRequest = new XMLHttpRequest();
+		        httpRequest.onreadystatechange = function () {
+		    		if (this.readyState == 4) {
+		    			if (this.responseText == "delete_fail") {
+		           	    	alert("글을 삭제하지 못했습니다.\n관리자에게 문의하세요.");
+		           	    }
+		           	    if (this.responseText == "true") {
+		           	    	alert("해당 글이 정상적으로 삭제되었습니다.");
+		           	    	location.href = "/codeReview/list";
+		           	    }
+		    		}
+		   	    }
+		    	httpRequest.open("GET", "/codeReview/deleteReview?codeReviewNum="+codeReviewNum, true);
+		   	 	httpRequest.send();
 			}
+			
 			
 			// 댓글 저장
 			function commentSave(indexNum, editCommentNum){
@@ -223,6 +245,7 @@
 		   	 	httpRequest.send(formData);
 			}
 			
+			
 			// 댓글 삭제
 			function commentDelete(commentNum){
 				let httpRequest = new XMLHttpRequest();
@@ -230,8 +253,6 @@
 		    		if (this.readyState == 4) {
 		    			if (this.responseText == "delete_fail") {
 		           	    	alert("댓글을 삭제하지 못했습니다.\n관리자에게 문의하세요.");
-		           	    	document.getElementsByClassName("maintextarea")[0].value = "";
-		    				let text = document.getElementsByClassName("textareaTag")[indexNum].value = "";
 		           	    }
 		           	    if (this.responseText == "true") {
 		           	    	alert("해당 댓글이 정상적으로 삭제되었습니다.");

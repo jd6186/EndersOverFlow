@@ -46,7 +46,7 @@ public class CodeReviewController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// 코드 리스트 전체 목록 페이지로 이동
-	@RequestMapping("list")
+	@RequestMapping("/list")
 	public String goCodeListPage(Model model) {
 		logger.info("codeReviewList 조회 시작");
 
@@ -173,5 +173,27 @@ public class CodeReviewController {
 		}
 		logger.info("doWritePage 종료");
 		return new ResponseEntity("true", HttpStatus.OK);
+	}
+	
+
+	// 글 삭제
+	@GetMapping(path = "/deleteReview")
+	public ResponseEntity deleteReviewPage(HttpServletRequest request, @RequestParam(value="codeReviewNum", required=false, defaultValue="value_is_null") String CR_NO){
+		logger.info("deleteReviewPage 진입");
+		try {
+			if(CR_NO.equals("value_is_null")) {
+				return new ResponseEntity("delete_fail", HttpStatus.OK);
+			}
+			long reqCR_NO = Long.parseLong(CR_NO);
+			CodeReview codeReview = codeReviewService.codeReviewFindById(reqCR_NO);
+			codeReview.setCR_ISVIEW("N");
+			codeReviewService.save(codeReview);
+			logger.info("deleteReviewPage 정상종료");
+			return new ResponseEntity("true", HttpStatus.OK);
+		}catch (Exception e) {
+			logger.warn("글 삭제에 실패했습니다. : " + e);
+			logger.warn("deleteReviewPage 비정상 종료");
+			return new ResponseEntity("delete_fail", HttpStatus.OK);
+		}
 	}
 }
