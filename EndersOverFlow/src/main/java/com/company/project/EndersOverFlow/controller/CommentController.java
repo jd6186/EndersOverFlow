@@ -46,7 +46,7 @@ public class CommentController {
 		
 		// Session사용해서 유저정보 확인하기
 		HttpSession session = request.getSession(true);
-		String userUUID = (String) session.getAttribute("userEmail");
+		String userUUID = (String) session.getAttribute("userAuth");
 		Member meber = memberService.userCheck(userUUID);
 		
 		String CM_CONTENTS = request.getParameter("CM_CONTENTS")==null ? "None" : request.getParameter("CM_CONTENTS");

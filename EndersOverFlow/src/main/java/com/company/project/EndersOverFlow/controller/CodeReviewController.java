@@ -71,7 +71,7 @@ public class CodeReviewController {
 
 		// Session사용해서 유저정보 확인하기
 		HttpSession session = request.getSession(true);
-		String userUUID = (String) session.getAttribute("userEmail");
+		String userUUID = (String) session.getAttribute("userAuth");
 		Member member = memberService.userCheck(userUUID);
 		// 글 작성자와 현재 유저가 같은 유저인지 비교하기
 		boolean result = (member.getMBR_NO() == codeReview.getCR_CREATER().getMBR_NO()) ? true : false;
@@ -137,7 +137,7 @@ public class CodeReviewController {
 
 		// Session사용해서 유저정보 확인하기
 		HttpSession session = request.getSession(true);
-		String userUUID = (String) session.getAttribute("userEmail");
+		String userUUID = (String) session.getAttribute("userAuth");
 		Member meber = memberService.userCheck(userUUID);
 	    System.out.println("유저데이터는");
 	    System.out.println(meber);
