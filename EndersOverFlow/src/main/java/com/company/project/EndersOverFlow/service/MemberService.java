@@ -23,7 +23,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 @Service
-@SessionAttributes("userEmail")
 public class MemberService{
 	// @PersistenceContext 즉, 영속성 컨텍스트는 엔티티를 영구 저장하는 환경으로써 EntityManager로 엔티티를 저장하거나 조회하면 
 	// EntityManager는 영속성 컨텍스트에 엔티티를 보관하고 관리한다.

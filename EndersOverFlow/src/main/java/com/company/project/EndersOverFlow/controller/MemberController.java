@@ -68,7 +68,7 @@ public class MemberController {
 				boolean result = memberService.loginUuidUpdate(searchMember);
 				HttpSession session = request.getSession();
 				session.setAttribute("userEmail", searchMember.getMBR_EMAIL());
-				session.setAttribute("userAuth", searchMember.getMBR_AUTH());
+				session.setAttribute("userAuth", searchMember.getMBR_LOGINUUID());
 				if (result) {
 					return new ResponseEntity("login", HttpStatus.OK);
 				} else {
@@ -133,15 +133,6 @@ public class MemberController {
 		result = memberService.passwordUpdate(MBR_EMAIL, MBR_PASSWORD, MBR_NEW_PASSWORD, member);
 		logger.info("회원번호로 회원 수정 페이지 종료");
 		return new ResponseEntity(result, HttpStatus.OK);
-	}
-
-	// 회원번호로 회원 삭제
-	@DeleteMapping(value = "/{mbrNo}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity deleteMember(@PathVariable("mbrNo") Long mbrNo) {
-		logger.info("회원번호로 회원 삭제 페이지 종료");
-		memberService.deleteById(mbrNo);
-		logger.info("회원번호로 회원 수정 페이지 종료");
-		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	// 회원UUID로 회원가입 승인여부 판단
